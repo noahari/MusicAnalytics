@@ -5,7 +5,7 @@ import re
 
 ##The Url for the song input
 songtitle = 'River'
-artist - 'Eminem'
+artist = 'Eminem'
 url = 'https://genius.com/'+artist+'-'+songtitle+'-lyrics'
 
 ##Takes the Url and strips the html down to just the lyrics
