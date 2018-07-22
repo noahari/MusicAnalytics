@@ -1,6 +1,5 @@
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 import numpy as np
 import re
 
@@ -8,6 +7,8 @@ import re
 
 
 def obtain_lyrics():
+    ##Takes the Url and strips the html down to just the lyrics
+    ##The Lyrics are placed into var clean
     source = requests.get(url).text
     source = source.split('<div class="lyrics">')[1]
     source = source.split('<!--/sse-->')[0]
@@ -16,7 +17,7 @@ def obtain_lyrics():
 
 
 def sentiment_analysis():
-
+    pass
 
 
 
@@ -30,5 +31,9 @@ def sentiment_analysis():
 
 url = 'https://genius.com/Eminem-river-lyrics'
 
+##The Url for the song input
+songtitle = 'River'
+artist = 'Eminem'
+url = 'https://genius.com/'+artist+'-'+songtitle+'-lyrics'
 
 
