@@ -29,11 +29,7 @@ def sentiment_analysis(lyrics):
    sid = SentimentIntensityAnalyzer()
    ss = sid.polarity_scores(lyrics)
    return ss
-
-def input_comber(title, artist):
-    title = title.replace(" ", "-")
-    artist = artist.replace(" ", "-")
-    return
+    
 
 #This will need to run for each line separately, otherwise its useless
 def scansion_scanner(lyrics):
