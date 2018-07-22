@@ -62,7 +62,7 @@ artist = 'xxxtentacion'
 lyrics = scrape_lyrics(title, artist)
 sentiment = sentiment_analysis(lyrics)
 syllables = scansion_scanner(lyrics)
-
+reading_level = reading_level(lyrics)
 
 
 
