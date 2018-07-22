@@ -4,7 +4,6 @@ import numpy as np
 import re
 import nltk
 from textstat.textstat import textstat
-#not currently working bc module not found error and i die
 from nltk.sentiment.vader import SentimentIntensityAnalyzer 
 nltk.download('vader_lexicon')
 
