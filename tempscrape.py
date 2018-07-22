@@ -84,6 +84,9 @@ reading_level = reading_level(lyrics)
 id = search_song_id(title, artist)
 
 
+analysis = sp.audio_analysis(id)
+features = sp.audio_features(id)
+
 
 
 
