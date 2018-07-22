@@ -5,7 +5,7 @@ import re
 import nltk
 from textstat.textstat import textstat
 from nltk.sentiment.vader import SentimentIntensityAnalyzer 
-nltk.download('vader_lexicon')
+#nltk.download('vader_lexicon')
 
 
 def scrape_lyrics(title, artist):
@@ -14,12 +14,15 @@ def scrape_lyrics(title, artist):
     title = title.replace(" ", "-")
     artist = artist.replace(" ", "-")
     url = url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
-    source = requests.get(url).text
+    source = requests.get(url)
+    if source.status_code == 404:
+        print('Error')
+        raise Exception('Incorrect track or artist')
+    source = source.text
     source = source.split('<div class="lyrics">')[1]
     source = source.split('<!--/sse-->')[0]
     clean = re.sub('<[^>]+>', '', source).strip()
     return clean
-
 
 def sentiment_analysis(lyrics):
     #in future get rid of brackets that have artist name
@@ -36,6 +39,7 @@ def input_comber(title, artist):
 def scansion_scanner(lyrics):
     sc = textstat.syllable_count(lyrics)
     return sc
+
 
 #decided which formula to use from documentation and this guide
 #https://pypi.org/project/textstat/
@@ -55,7 +59,7 @@ def reading_level(lyrics):
 ##InputGrabbers, commented out til GUI figured out
     ##title=Raw_Input('Song Title?')
     ##artist=Raw_Input('Artist name?')
-title = 'look-at-me'
+title = 'look at me'
 artist = 'xxxtentacion'
 
 
