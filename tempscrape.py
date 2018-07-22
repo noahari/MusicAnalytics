@@ -12,4 +12,4 @@ source = source.text
 new = source.split('<div class="lyrics">')[1]
 new = new.split('<!--/sse-->')[0]
 
-clean = re.sub('<[^>]+>', '', new)
+clean = re.sub('<[^>]+>', '', source).strip()
