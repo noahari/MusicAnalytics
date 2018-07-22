@@ -6,6 +6,15 @@ import nltk
 from textstat.textstat import textstat
 from nltk.sentiment.vader import SentimentIntensityAnalyzer 
 #nltk.download('vader_lexicon')
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+client_id = '91df6ca120d7407a877a64fabb100b49'
+client_secret = '05a35b3ad63948c398d82dc8251d2bfb'
+
+client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
 
 
 def scrape_lyrics(title, artist):
@@ -51,6 +60,15 @@ def reading_level(lyrics):
 #50.0–30.0 	College 	Difficult to read.
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
+def search_song_id(title, artist):
+    search = title + ' ' + artist
+    result = sp.search(q = search, limit = 1, type = 'track')
+    result = result['tracks']
+    result = result['items'][0]
+    return result['id']
+
+
+
 
 ##InputGrabbers, commented out til GUI figured out
     ##title=Raw_Input('Song Title?')
@@ -63,6 +81,10 @@ lyrics = scrape_lyrics(title, artist)
 sentiment = sentiment_analysis(lyrics)
 syllables = scansion_scanner(lyrics)
 reading_level = reading_level(lyrics)
+id = search_song_id(title, artist)
+
+
+
 
 
 
