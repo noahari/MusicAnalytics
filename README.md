@@ -37,11 +37,14 @@ Word Frequency
 Thematic Analysis
 Writing Level (lmao)
 Allusions/References
+Scansion
 ```
 
 Long Term Ideas
 ```
 Mapping over multiple songs for Week/Month/Year Analysis
-Supervised Learning
+Supervised Learning (to predict wanted?)
 Advanced Data
+Song Structure
+Sentiment Analyser Supervised Machine Learning Upgrade
 ```
