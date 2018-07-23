@@ -103,7 +103,7 @@ def search_song_id(title, artist):
 
 def search_album_id(album, artist):  
     id_holder = {}
-    title = re.sub('[^0-9a-zA-Z]+', '', title)
+    album = re.sub('[^0-9a-zA-Z]+', '', album)
     artist = re.sub('[^0-9a-zA-Z]+', '', artist)
     search = album + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'album')
