@@ -45,7 +45,7 @@ def sentiment_analysis(lyrics):
     #in future get rid of brackets that have artist name
    sid = SentimentIntensityAnalyzer()
    ss = sid.polarity_scores(lyrics)
-   return ss
+   return ss['compound']
     
 
 def valence_analysis(id):
@@ -157,11 +157,14 @@ def assemble_df(song_list):
         holder['liveness'] = features['liveness']
         holder['time_signature'] = features['time_signature']
         info = info.append(holder, ignore_index = True)
+    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    for column in info.select_dtypes(include = numerics).columns:
+        info.at['Album average', column] = info[column].mean()
     return info
         
 title = ''
-album = 'saturation'
-artist = 'Brockhampton'
+album = 'kids see ghosts'
+artist = 'kids see ghosts'
 playlist = ''
 
 
@@ -171,7 +174,7 @@ else:
     song_list = search_song_id(title, artist)
 
 df = assemble_df(song_list)
-    
+
     
     
 #    analysis = sp.audio_analysis(id)
