@@ -28,7 +28,7 @@ def scrape_lyrics(title, artist):
     artist = artist.replace(" ", "-")
     artist = artist.replace("&", "and")
     artist = re.sub('[^0-9a-zA-Z]+', '', artist)
-    url = url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
+    url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
     source = requests.get(url)
     if source.status_code == 404:
         print('Error')
@@ -59,7 +59,7 @@ def mood_analysis(lyrics, id):
         if valence < .5:
             return "Angry"
         else:
-            return "idk"
+            return "Hopeful"
     else:
         if valence < .5:
             return "Sad"
@@ -92,8 +92,6 @@ def reading_level(lyrics):
 
 def search_song_id(title, artist):
     id_holder = {}
-    title = re.sub('[^0-9a-zA-Z]+', '', title)
-    artist = re.sub('[^0-9a-zA-Z]+', '', artist)
     search = title + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'track')
     result = result['tracks']
@@ -103,8 +101,6 @@ def search_song_id(title, artist):
 
 def search_album_id(album, artist):  
     id_holder = {}
-    album = re.sub('[^0-9a-zA-Z]+', '', album)
-    artist = re.sub('[^0-9a-zA-Z]+', '', artist)
     search = album + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'album')
     result = result['albums']
@@ -117,11 +113,52 @@ def search_album_id(album, artist):
 ##InputGrabbers, commented out til GUI figured out
     ##title=Raw_Input('Song Title?')
     ##artist=Raw_Input('Artist name?')
+
+def assemble_df(song_list):
+    info = pd.DataFrame(columns = ('track',
+                                   'lyrics',
+                                   'sentiment',
+                                   'syllables',
+                                   'reading_level',
+                                   'word_frequency',
+                                   'acousticness',
+                                   'danceability',
+                                   'duration_ms',
+                                   'energy',
+                                   'speechiness',
+                                   'tempo',
+                                   'valence',
+                                   'loudness',
+                                   'liveness',
+                                   'time_signature'
+                                   ))
     
-    
-    
-title = 'Gumm\y'
-album = ''
+    for title in song_list.keys():
+        holder = {}
+        print(title)
+        holder['track'] = title
+        lyrics = scrape_lyrics(title, artist)
+        holder['lyrics'] = lyrics
+        holder['sentiment'] = sentiment_analysis(lyrics)
+        holder['syllables'] = scansion_scanner(lyrics)
+        holder['reading_level'] = reading_level(lyrics)
+        holder['word_frequency'] = word_frequency(lyrics)
+        features = sp.audio_features(song_list[title])[0]
+        holder['acousticness'] = features['acousticness']
+        holder['danceability'] = features['danceability']
+        holder['duration_ms'] = features['duration_ms']
+        holder['energy'] = features['energy']
+        holder['speechiness'] = features['speechiness']
+        holder['tempo'] = features['tempo']
+        holder['valence'] = features['valence']
+        holder['loudness'] = features['loudness']
+        holder['liveness'] = features['liveness']
+        holder['time_signature'] = features['time_signature']
+        info = info.append(holder, ignore_index = True)
+    return info
+        
+title = ''
+album = 'saturation'
 artist = 'Brockhampton'
 playlist = ''
 
@@ -131,19 +168,14 @@ if album != '':
 else:
     song_list = search_song_id(title, artist)
 
-
-for title in song_list.keys():
-    print(title)
-    lyrics = scrape_lyrics(title, artist)
-    sentiment = sentiment_analysis(lyrics)
-    syllables = scansion_scanner(lyrics)
-    reading_level = reading_level(lyrics)
-    word_frequency = word_frequency(lyrics)
+df = assemble_df(song_list)
     
-    analysis = sp.audio_analysis(id)
-    features = sp.audio_features(id)[0]
-    valence = valence_analysis(id)
-    mood = mood_analysis(lyrics, id)
+    
+    
+#    analysis = sp.audio_analysis(id)
+#    valence = valence_analysis(id)
+#    mood = mood_analysis(lyrics, id)
+    
 
 
 
