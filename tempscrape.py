@@ -8,6 +8,8 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 #nltk.download('vader_lexicon')
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+from collections import Counter
+
 
 client_id = '91df6ca120d7407a877a64fabb100b49'
 client_secret = '05a35b3ad63948c398d82dc8251d2bfb'
@@ -45,7 +47,9 @@ def scansion_scanner(lyrics):
     sc = textstat.syllable_count(lyrics)
     return sc
 
-
+def word_frequency(lyrics):
+    return Counter(lyrics.split()).most_common()
+    
 #decided which formula to use from documentation and this guide
 #https://pypi.org/project/textstat/
 #http://www.readabilityformulas.com/articles/how-do-i-decide-which-readability-formula-to-use.php
@@ -77,8 +81,8 @@ def playlistScan(id):
 ##InputGrabbers, commented out til GUI figured out
     ##title=Raw_Input('Song Title?')
     ##artist=Raw_Input('Artist name?')
-title = 'look at me'
-artist = 'xxxtentacion'
+title = 'rusty'
+artist = 'tyler the creator'
 
 
 lyrics = scrape_lyrics(title, artist)
@@ -86,10 +90,10 @@ sentiment = sentiment_analysis(lyrics)
 syllables = scansion_scanner(lyrics)
 reading_level = reading_level(lyrics)
 id = search_song_id(title, artist)
-
+word_frequency = word_frequency(lyrics)
 
 analysis = sp.audio_analysis(id)
-features = sp.audio_features(id)
+features = sp.audio_features(id)[0]
 
 
 
