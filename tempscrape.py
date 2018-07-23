@@ -135,6 +135,7 @@ def assemble_df(song_list):
                                    'loudness',
                                    'liveness',
                                    'time_signature'
+                                   'id'
                                    ))
     
     for title in song_list.keys():
@@ -158,11 +159,16 @@ def assemble_df(song_list):
         holder['loudness'] = features['loudness']
         holder['liveness'] = features['liveness']
         holder['time_signature'] = features['time_signature']
+        holder['id'] = features['id']
         info = info.append(holder, ignore_index = True)
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in info.select_dtypes(include = numerics).columns:
         info.at['Album average', column] = info[column].mean()
     return info
+
+
+
+
         
 title = ''
 album = 'the marshall mathers lp'
