@@ -36,7 +36,7 @@ def scrape_lyrics(title, artist):
     source = requests.get(url)
     if source.status_code == 404:
         print('Error')
-        raise Exception('Incorrect track or artist')
+        return 'na'
     source = source.text
     source = source.split('<div class="lyrics">')[1]
     source = source.split('<!--/sse-->')[0]
@@ -127,7 +127,7 @@ def assemble_df(song_list):
                                    'word_frequency',
                                    'acousticness',
                                    'danceability',
-                                   'duration_ms',
+                                   'duration_s',
                                    'energy',
                                    'speechiness',
                                    'tempo',
@@ -150,7 +150,7 @@ def assemble_df(song_list):
         features = sp.audio_features(song_list[title])[0]
         holder['acousticness'] = features['acousticness']
         holder['danceability'] = features['danceability']
-        holder['duration_ms'] = features['duration_ms']
+        holder['duration_s'] = features['duration_ms']/1000
         holder['energy'] = features['energy']
         holder['speechiness'] = features['speechiness']
         holder['tempo'] = features['tempo']
@@ -165,8 +165,8 @@ def assemble_df(song_list):
     return info
         
 title = ''
-album = 'Blonde'
-artist = 'Frank Ocean'
+album = 'the marshall mathers lp'
+artist = 'eminem'
 playlist = ''
 
 
