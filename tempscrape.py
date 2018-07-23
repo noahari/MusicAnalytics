@@ -123,9 +123,6 @@ if album != '':
 else:
     song_list = search_song_id(title, artist)
 
-<<<<<<< HEAD
-
-=======
 
 for title in song_list.keys():
     print(title)
