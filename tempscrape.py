@@ -23,11 +23,13 @@ def scrape_lyrics(title, artist):
     ##Takes the Url and strips the html down to just the lyrics
     ##The Lyrics are placed into var clean
     title = title.replace(" ", "-")
+    title = title.replace("/", "-")
     title = title.replace("&", "and")
-    title = re.sub('[^0-9a-zA-Z]+', '', title)
+    title = re.sub('[^0-9a-zA-Z-]+', '', title)
     artist = artist.replace(" ", "-")
+    artist = artist.replace("/", "-")
     artist = artist.replace("&", "and")
-    artist = re.sub('[^0-9a-zA-Z]+', '', artist)
+    artist = re.sub('[^0-9a-zA-Z-]+', '', artist)
     url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
     source = requests.get(url)
     if source.status_code == 404:
