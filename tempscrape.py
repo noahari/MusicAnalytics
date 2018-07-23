@@ -87,37 +87,58 @@ def reading_level(lyrics):
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
 def search_song_id(title, artist):
+    id_holder = {}
     search = title + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'track')
     result = result['tracks']
     result = result['items'][0]
-    return result['id']
+    id_holder[title] = result['id']
+    return id_holder
 
-def playlistScan(id):    
-    for ids in id:
-        Pfeatures = sp.audio_features(ids)
-        Pfeatures = ['valence']
-    return
-
-
+def search_album_id(album, artist):  
+    id_holder = {}
+    search = album + ' ' + artist
+    result = sp.search(q = search, limit = 1, type = 'album')
+    result = result['albums']
+    result = result['items'][0]
+    tracks = sp.album_tracks(result['id'])
+    tracks = tracks['items']
+    for item in tracks:
+        id_holder[item['name']] = item['id']
+    return id_holder
 ##InputGrabbers, commented out til GUI figured out
     ##title=Raw_Input('Song Title?')
     ##artist=Raw_Input('Artist name?')
+    
+    
+    
 title = 'rusty'
+album = ''
 artist = 'tyler the creator'
+playlist = ''
 
 
-lyrics = scrape_lyrics(title, artist)
-sentiment = sentiment_analysis(lyrics)
-syllables = scansion_scanner(lyrics)
-reading_level = reading_level(lyrics)
-id = search_song_id(title, artist)
-word_frequency = word_frequency(lyrics)
+if album != '':
+    song_list = search_album_id(album, artist)
+else:
+    song_list = search_song_id(title, artist)
 
-analysis = sp.audio_analysis(id)
-features = sp.audio_features(id)[0]
-valence = valence_analysis(id)
-mood = mood_analysis(lyrics, id)
+<<<<<<< HEAD
+
+=======
+
+for title in song_list.keys():
+    print(title)
+    lyrics = scrape_lyrics(title, artist)
+    sentiment = sentiment_analysis(lyrics)
+    syllables = scansion_scanner(lyrics)
+    reading_level = reading_level(lyrics)
+    word_frequency = word_frequency(lyrics)
+    
+    analysis = sp.audio_analysis(id)
+    features = sp.audio_features(id)[0]
+    valence = valence_analysis(id)
+    mood = mood_analysis(lyrics, id)
 
 
 
