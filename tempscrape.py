@@ -87,10 +87,14 @@ def search_album_id(album, artist):
 ##InputGrabbers, commented out til GUI figured out
     ##title=Raw_Input('Song Title?')
     ##artist=Raw_Input('Artist name?')
-title = ''
+    
+    
+    
+title = 'rusty'
+album = ''
 artist = 'tyler the creator'
 playlist = ''
-album = 'wolf'
+
 
 if album != '':
     song_list = search_album_id(album, artist)
@@ -99,6 +103,7 @@ else:
 
 
 for title in song_list.keys():
+    print(title)
     lyrics = scrape_lyrics(title, artist)
     sentiment = sentiment_analysis(lyrics)
     syllables = scansion_scanner(lyrics)
