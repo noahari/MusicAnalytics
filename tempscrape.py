@@ -26,10 +26,12 @@ def scrape_lyrics(title, artist):
     title = title.replace("/", "-")
     title = title.replace("&", "and")
     title = re.sub('[^0-9a-zA-Z-]+', '', title)
+    title = re.sub('--*','-', title)
     artist = artist.replace(" ", "-")
     artist = artist.replace("/", "-")
     artist = artist.replace("&", "and")
     artist = re.sub('[^0-9a-zA-Z-]+', '', artist)
+    artist = re.sub('--*','-', artist)
     url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
     source = requests.get(url)
     if source.status_code == 404:
@@ -163,8 +165,8 @@ def assemble_df(song_list):
     return info
         
 title = ''
-album = 'kids see ghosts'
-artist = 'kids see ghosts'
+album = 'Blonde'
+artist = 'Frank Ocean'
 playlist = ''
 
 
