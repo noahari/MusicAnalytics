@@ -23,7 +23,11 @@ def scrape_lyrics(title, artist):
     ##Takes the Url and strips the html down to just the lyrics
     ##The Lyrics are placed into var clean
     title = title.replace(" ", "-")
+    title = title.replace("&", "and")
+    title = re.sub('[^0-9a-zA-Z]+', '', title)
     artist = artist.replace(" ", "-")
+    artist = artist.replace("&", "and")
+    artist = re.sub('[^0-9a-zA-Z]+', '', artist)
     url = url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
     source = requests.get(url)
     if source.status_code == 404:
@@ -88,6 +92,8 @@ def reading_level(lyrics):
 
 def search_song_id(title, artist):
     id_holder = {}
+    title = re.sub('[^0-9a-zA-Z]+', '', title)
+    artist = re.sub('[^0-9a-zA-Z]+', '', artist)
     search = title + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'track')
     result = result['tracks']
@@ -97,6 +103,8 @@ def search_song_id(title, artist):
 
 def search_album_id(album, artist):  
     id_holder = {}
+    title = re.sub('[^0-9a-zA-Z]+', '', title)
+    artist = re.sub('[^0-9a-zA-Z]+', '', artist)
     search = album + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'album')
     result = result['albums']
@@ -112,9 +120,9 @@ def search_album_id(album, artist):
     
     
     
-title = 'rusty'
+title = 'Gumm\y'
 album = ''
-artist = 'tyler the creator'
+artist = 'Brockhampton'
 playlist = ''
 
 
