@@ -42,6 +42,28 @@ def sentiment_analysis(lyrics):
    return ss
     
 
+def valence_analysis(id):
+    valence = sp.audio_features(id)[0]
+    valence = valence['valence']
+    return valence
+
+def mood_analysis(lyrics, id):
+    sentiment = sentiment_analysis(lyrics)
+    sentiment = sentiment['compound']
+    valence = valence_analysis(id)
+    if sentiment < 0:
+        if valence < .5:
+            return "Angry"
+        else:
+            return "idk"
+    else:
+        if valence < .5:
+            return "Sad"
+        else:
+            return "Happy"
+
+    
+
 #This will need to run for each line separately, otherwise its useless
 def scansion_scanner(lyrics):
     sc = textstat.syllable_count(lyrics)
@@ -94,6 +116,8 @@ word_frequency = word_frequency(lyrics)
 
 analysis = sp.audio_analysis(id)
 features = sp.audio_features(id)[0]
+valence = valence_analysis(id)
+mood = mood_analysis(lyrics, id)
 
 
 
