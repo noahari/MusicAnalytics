@@ -67,7 +67,11 @@ def search_song_id(title, artist):
     result = result['items'][0]
     return result['id']
 
-
+def playlistScan(id):    
+    for ids in id:
+        Pfeatures = sp.audio_features(ids)
+        Pfeatures = ['valence']
+    return
 
 
 ##InputGrabbers, commented out til GUI figured out
