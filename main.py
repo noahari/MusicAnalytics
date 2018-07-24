@@ -6,14 +6,13 @@ import data_scrape
 
 
         
-title = ''
-album = 'wolf'
+title = 'wolf'
 artist = 'tyler the creator'
 playlist = ''
 
 
-if album != '':
-    song_list = data_scrape.search_album_id(album, artist)
+if title != '':
+    song_list = data_scrape.search_album_id(title, artist)
 else:
     song_list = data_scrape.search_song_id(title, artist)
 

@@ -42,7 +42,6 @@ def test(title, artist, albool):
         song_list = data_scrape.search_song_id(title, artist)
     total = data_scrape.assemble_df(song_list)
     total = total.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
-    print(total.head())
     if albool == 1:
         total = total.drop('Album average', 0)
         output = []
