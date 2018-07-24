@@ -9,6 +9,10 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
+import banger
+
+
+
 
 
 client_id = '91df6ca120d7407a877a64fabb100b49'
@@ -181,8 +185,10 @@ if album != '':
 else:
     song_list = search_song_id(title, artist)
 
-df = assemble_df(song_list)
+#df = assemble_df(song_list)
 
+df = pd.read_csv('training_data.csv', encoding = "ISO-8859-1", error_bad_lines=False)
+#banger.train()
     
     
 #    analysis = sp.audio_analysis(id)

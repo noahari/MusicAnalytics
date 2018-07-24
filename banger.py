@@ -1,7 +1,18 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 23 19:56:49 2018
+import pandas as pd
 
-@author: skhos
-"""
 
+
+
+
+def train():
+    #term frequency inverse document frequency
+    #svm model to assign banger or not
+    df = pd.read_csv('training_data.csv')
+    pass
+
+
+
+def test():
+    #random forest classifer
+    pass
