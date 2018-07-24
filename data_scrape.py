@@ -174,3 +174,8 @@ def assemble_df(song_list):
         info.at['Album average', column] = info[column].mean()
     return info
 
+#Rudimentary start to print output possibly necessary for gui/end user
+def print_df(df):
+    with pd.option_context('display.max_rows', None, 'display.max_columns', 3):
+        print(df)
+    return

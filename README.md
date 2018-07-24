@@ -38,6 +38,7 @@ Thematic Analysis
 Writing Level (lmao)
 Allusions/References
 Scansion
+GETTERS
 ```
 
 Long Term Ideas

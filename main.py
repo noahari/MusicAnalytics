@@ -26,7 +26,7 @@ banger_or_nah = banger.test(title, artist, 0)
 #    mood = mood_analysis(lyrics, id)
     
 
-
+#data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
 
 
 
