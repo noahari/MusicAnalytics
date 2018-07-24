@@ -170,9 +170,14 @@ def assemble_df(song_list):
         holder['id'] = features['id']
         info = info.append(holder, ignore_index = True)
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-    for column in info.select_dtypes(include = numerics).columns:
-        info.at['Album average', column] = info[column].mean()
+    if len(song_list.keys()) > 1:
+        for column in info.select_dtypes(include = numerics).columns:
+            info.at['Album average', column] = info[column].mean()
     return info
+
+#getter
+def get_dfinfo(df, index):
+    return df.get(index)
 
 #Rudimentary start to print output possibly necessary for gui/end user
 def print_df(df):

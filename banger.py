@@ -35,7 +35,7 @@ def test(title, artist, albool):
     else:
         song_list = data_scrape.search_song_id(title, artist)
     total = data_scrape.assemble_df(song_list)
-    total = total.drop('Album average', 0)
+    #total = total.drop('Album average', 0)
     total = total.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
     if albool == 1:
         output = []
