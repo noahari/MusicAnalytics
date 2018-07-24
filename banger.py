@@ -50,18 +50,23 @@ def test(title, artist, albool):
         #the present error is likely here, due to clf.predict recieving 
         #an incorrectly shaped array, possibly due to handing it a row instead of a df
         #possible solution: convert index in loop to df data type before clf.predict
+        confidence = 0
+        count = 1
         for index,row in total.iterrows():
             output.append(clf.predict(row))
+            confidence += clf.predict_proba(row)[0]
+            count += 1
         finout = float(sum(output))/float(len(output))
+        confidence = confidence / count
         #return finout+'% Banger Album'
         if finout > .5:
-            return 'banger'
+            return ('banger', confidence)
         else:
-            return 'soft'
+            return ('soft', confidence)
     else:    
         output = clf.predict(total)
         if output == 1:
-            return ('banger', clf.predict_proba(total))
+            return ('banger', clf.predict_proba(total)[0])
         else:
-            return ('soft', clf.predict_proba(total))
+            return ('soft', clf.predict_proba(total)[0])
         
