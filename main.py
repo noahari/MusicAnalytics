@@ -6,9 +6,9 @@ import data_scrape
 
 
         
-title = 'kim'
+title = 'demons'
 album = ''
-artist = 'eminem'
+artist = 'joji'
 playlist = ''
 
 
@@ -19,8 +19,7 @@ else:
 
 #df = data_scrape.assemble_df(song_list, artist)
 
-
-banger_or_nah = banger.test('mad sounds', 'arctic monkeys')
+banger_or_nah = banger.test(title, artist, 0)
     
 #    analysis = sp.audio_analysis(id)
 #    valence = valence_analysis(id)
