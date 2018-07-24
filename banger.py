@@ -36,7 +36,6 @@ def percent_bangitude(title, artist):
     
 def test(title, artist, albool):
     clf = joblib.load('rf_model.pkl')
-    print(clf.feature_importances_)
     if albool == 1:
         song_list = data_scrape.search_album_id(title, artist)
     else:
@@ -54,19 +53,19 @@ def test(title, artist, albool):
         count = 1
         for index,row in total.iterrows():
             output.append(clf.predict(row))
-            confidence += clf.predict_proba(row)[0]
+            confidence += clf.predict_proba(row)[0][0]
             count += 1
         finout = float(sum(output))/float(len(output))
         confidence = confidence / count
         #return finout+'% Banger Album'
         if finout > .5:
-            return ('banger', confidence)
+            return ['banger', confidence]
         else:
-            return ('soft', confidence)
+            return ['soft', confidence]
     else:    
         output = clf.predict(total)
         if output == 1:
-            return ('banger', clf.predict_proba(total)[0])
+            return ['banger', clf.predict_proba(total)[0][0]]
         else:
-            return ('soft', clf.predict_proba(total)[0])
+            return ['soft', clf.predict_proba(total)[0][0]]
         

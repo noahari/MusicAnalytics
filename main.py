@@ -6,9 +6,9 @@ import data_scrape
 
 
         
-title = 'in tongues'
-album = ''
-artist = 'joji'
+title = ''
+album = 'wolf'
+artist = 'tyler the creator'
 playlist = ''
 
 
@@ -19,8 +19,7 @@ else:
 
 #df = data_scrape.assemble_df(song_list, artist)
 
-banger_or_nah = banger.test(title, artist, 0)
-confidence = banger.percent_bangitude(title, artist)
+banger_or_nah = banger.test(title, artist, 1)
 #    analysis = sp.audio_analysis(id)
 #    valence = valence_analysis(id)
 #    mood = mood_analysis(lyrics, id)
