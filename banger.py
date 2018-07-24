@@ -38,16 +38,16 @@ def test(title, artist, albool):
     else:
         song_list = data_scrape.search_song_id(title, artist)
     total = data_scrape.assemble_df(song_list)
-    #total = total.drop('Album average', 0)
     total = total.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
     if albool == 1:
+        total = total.drop('Album average', 0)
         output = []
-        acc = 0
-        for song in total:
-            output = output.append(clf.predict(song))
-        for bools in output:
-            acc = acc + bools
-        finout = acc/len(output)
+        #the present error is likely here, due to clf.predict recieving 
+        #an incorrectly shaped array, possibly due to handing it a row instead of a df
+        #possible solution: convert index in loop to df data type before clf.predict
+        for index in total.iterrows():
+            output = output.append(clf.predict(index))
+        finout = float(sum(output))/float(len(output))
         #return finout+'% Banger Album'
         if finout > .5:
             return 'banger'
@@ -60,5 +60,3 @@ def test(title, artist, albool):
         else:
             return 'soft'
         
-testvar = percent_bangitude('Yonkers','Tyler the creator')
-print(testvar)
