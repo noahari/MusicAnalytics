@@ -25,8 +25,9 @@ banger_or_nah = banger.test(title, artist, 0)
 #    valence = valence_analysis(id)
 #    mood = mood_analysis(lyrics, id)
     
-hello = data_scrape.get_dfinfo(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)), 'energy')
-print(hello)
+testdf = data_scrape.assemble_df(data_scrape.search_song_id(title, artist))
+testval = testdf.at(0,'energy')
+print(testval)
 #data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
 
 

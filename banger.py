@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
+import numpy as np
 import data_scrape
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.externals import joblib
@@ -24,8 +25,10 @@ def train():
 def percent_bangitude(title, artist):
     songid = data_scrape.search_song_id(title, artist)
     songdata = data_scrape.assemble_df(songid)
-    bangitude = songdata['energy'] + songdata['danceability']
-    bangitude = (bangitude/2)*100
+    energy = float(np.float64(songdata.get_value(0,'energy')).item())
+    danceability = float(np.float64(songdata.get_value(0,'danceability')).item())
+    bangitude = energy + danceability
+    bangitude = str((round((bangitude/2)*100,2)))
     return 'This song is '+bangitude+'% bangin'
     
 def test(title, artist, albool):
@@ -57,5 +60,5 @@ def test(title, artist, albool):
         else:
             return 'soft'
         
-#testvar = percent_bangitude('Yonkers','Tyler the creator')
-#print(testvar)
+testvar = percent_bangitude('Yonkers','Tyler the creator')
+print(testvar)
