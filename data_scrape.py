@@ -143,7 +143,7 @@ def assemble_df(song_list):
                                    'valence',
                                    'loudness',
                                    'liveness',
-                                   'time_signature'
+                                   'time_signature',
                                    'id'
                                    ))
     
