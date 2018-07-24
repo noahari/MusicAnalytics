@@ -44,7 +44,7 @@ def scrape_lyrics(title, artist):
     url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
     source = requests.get(url)
     if source.status_code == 404:
-        print('Error')
+        print('Could not getting lyrics')
         return 'na'
     source = source.text
     source = source.split('<div class="lyrics">')[1]

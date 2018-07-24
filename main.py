@@ -20,7 +20,7 @@ else:
 #df = data_scrape.assemble_df(song_list, artist)
 
 banger_or_nah = banger.test(title, artist, 0)
-pt2 = banger.percent_bangitude(title, artist)
+confidence = banger.percent_bangitude(title, artist)
 #    analysis = sp.audio_analysis(id)
 #    valence = valence_analysis(id)
 #    mood = mood_analysis(lyrics, id)

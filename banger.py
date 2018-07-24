@@ -23,23 +23,27 @@ def train():
     joblib.dump(clf, 'rf_model.pkl') 
     
 def percent_bangitude(title, artist):
+    
     songid = data_scrape.search_song_id(title, artist)
     songdata = data_scrape.assemble_df(songid)
-    energy = float(np.float64(songdata.at(0,'energy')).item())
+    energy = float(np.float64(songdata.get_value(0,'energy')).item())
     danceability = float(np.float64(songdata.get_value(0,'danceability')).item())
     bangitude = energy + danceability
     bangitude = str((round((bangitude/2)*100,2)))
     print('This song is '+bangitude+'% bangin')
     return
+
     
 def test(title, artist, albool):
     clf = joblib.load('rf_model.pkl')
+    print(clf.feature_importances_)
     if albool == 1:
         song_list = data_scrape.search_album_id(title, artist)
     else:
         song_list = data_scrape.search_song_id(title, artist)
     total = data_scrape.assemble_df(song_list)
     total = total.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
+    print(total.head())
     if albool == 1:
         total = total.drop('Album average', 0)
         output = []
@@ -57,7 +61,7 @@ def test(title, artist, albool):
     else:    
         output = clf.predict(total)
         if output == 1:
-            return 'banger'
+            return ('banger', clf.predict_proba(total))
         else:
-            return 'soft'
+            return ('soft', clf.predict_proba(total))
         
