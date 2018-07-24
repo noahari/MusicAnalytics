@@ -123,9 +123,7 @@ def search_album_id(album, artist):
     for item in tracks:
         id_holder[(item['name'], artist)] = item['id']
     return id_holder
-##InputGrabbers, commented out til GUI figured out
-    ##title=Raw_Input('Song Title?')
-    ##artist=Raw_Input('Artist name?')
+
 
 def assemble_df(song_list):
     info = pd.DataFrame(columns = ('track',

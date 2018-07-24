@@ -25,11 +25,12 @@ def train():
 def percent_bangitude(title, artist):
     songid = data_scrape.search_song_id(title, artist)
     songdata = data_scrape.assemble_df(songid)
-    energy = float(np.float64(songdata.get_value(0,'energy')).item())
+    energy = float(np.float64(songdata.at(0,'energy')).item())
     danceability = float(np.float64(songdata.get_value(0,'danceability')).item())
     bangitude = energy + danceability
     bangitude = str((round((bangitude/2)*100,2)))
-    return 'This song is '+bangitude+'% bangin'
+    print('This song is '+bangitude+'% bangin')
+    return
     
 def test(title, artist, albool):
     clf = joblib.load('rf_model.pkl')
@@ -45,8 +46,8 @@ def test(title, artist, albool):
         #the present error is likely here, due to clf.predict recieving 
         #an incorrectly shaped array, possibly due to handing it a row instead of a df
         #possible solution: convert index in loop to df data type before clf.predict
-        for index in total.iterrows():
-            output = output.append(clf.predict(index))
+        for index,row in total.iterrows():
+            output.append(clf.predict(row))
         finout = float(sum(output))/float(len(output))
         #return finout+'% Banger Album'
         if finout > .5:
