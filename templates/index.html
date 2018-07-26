@@ -2,13 +2,12 @@
 
 
 
-<script>
 
-var data = '{{ data }}';
 
-console.log(data)
 
-</script>
+
+
+
 
 <!DOCTYPE html>
 <meta charset="utf-8">
@@ -72,6 +71,7 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 //d3.csv("cars.csv", function(error, cars) {
+function draw_graph(data){
 
   // Extract the list of dimensions and create a scale for each.
   x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
@@ -145,6 +145,7 @@ var svg = d3.select("body").append("svg")
     .selectAll("rect")
       .attr("x", -8)
       .attr("width", 16);
+};
 //});
 
 function position(d) {
@@ -176,4 +177,9 @@ function brush() {
   });
 }
 
+ var data = '{{ data |safe  }}';
+ console.log(data)
+
+
+draw_graph(data)
 </script>

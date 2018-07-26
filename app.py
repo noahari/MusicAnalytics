@@ -14,10 +14,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    song_list = data_scrape.search_song_id('yonkers', 'tyler the creator')
+    song_list = data_scrape.search_album_id('wolf', 'tyler the creator')
     df = data_scrape.assemble_df(song_list)
     df = df.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
-    print(df.head())
+ 
     chart_data = df.to_dict(orient='records')
     data = json.dumps(chart_data)
     #data = {'chart_data': chart_data}
