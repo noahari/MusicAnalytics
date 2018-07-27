@@ -93,7 +93,7 @@ def word_frequency(lyrics):
 #https://pypi.org/project/textstat/
 #http://www.readabilityformulas.com/articles/how-do-i-decide-which-readability-formula-to-use.php
 def reading_level(lyrics):
-    rl = textstat.flesch_reading_ease(lyrics)
+    rl = textstat.flesch_kincaid_grade(lyrics)
     return rl
 #100.00-90.00 	5th grade 	Very easy to read. Easily understood by an average 11-year-old student.
 #90.0–80.0 	6th grade 	Easy to read. Conversational English for consumers.
