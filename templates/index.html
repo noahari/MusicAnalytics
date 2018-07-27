@@ -177,11 +177,12 @@ function brush() {
   });
 }
 
- 
+
  var data = "{{ data|safe  }}";
- console.log(data)
- console.log(typeof data)
- 
+
+var data = JSON.parse('{{ data | tojson | safe}}');
+console.log(data)
+
 
 draw_graph(data)
 </script>

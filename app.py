@@ -18,7 +18,8 @@ def index():
     df = data_scrape.assemble_df(song_list)
     df = df.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
  
-    
+
+        
     chart_data = df.to_dict(orient='records')
     data = json.dumps(chart_data)
     data = json.loads(data)   
