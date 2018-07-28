@@ -16,3 +16,5 @@ urllib3==1.23
 virtualenv==15.1.0
 virtualenvwrapper-win==1.2.1
 yarg==0.1.9
+sklearn==0.19.1
+spotipy==2.4.4
