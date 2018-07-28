@@ -196,4 +196,3 @@ XlsxWriter==1.0.4
 xlwings==0.11.8
 xlwt==1.3.0
 yarg==0.1.9
-zict==0.1.3
