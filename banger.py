@@ -57,14 +57,8 @@ def test(title, artist, albool):
         finout = float(sum(output))/float(len(output))
         confidence = confidence / count
         #return finout+'% Banger Album'
-        if finout > .5:
-            return ['banger', confidence]
-        else:
-            return ['soft', confidence]
+        return finout
     else:    
         output = clf.predict(total)
-        if output == 1:
-            return ['banger', clf.predict_proba(total)[0][0]]
-        else:
-            return ['soft', clf.predict_proba(total)[0][0]]
+        return output
         

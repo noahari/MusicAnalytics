@@ -129,7 +129,6 @@ def assemble_df(song_list):
     info = pd.DataFrame(columns = ('track',
                                    'lyrics',
                                    'sentiment',
-                                   'syllables',
                                    'reading_level',
                                    'word_frequency',
                                    'acousticness',
@@ -151,7 +150,6 @@ def assemble_df(song_list):
         lyrics = scrape_lyrics(tuple[0], tuple[1])
         holder['lyrics'] = lyrics
         holder['sentiment'] = sentiment_analysis(lyrics)
-        holder['syllables'] = scansion_scanner(lyrics)
         holder['reading_level'] = reading_level(lyrics)
         holder['word_frequency'] = word_frequency(lyrics)
         features = sp.audio_features(song_list[tuple])[0]
@@ -170,8 +168,8 @@ def assemble_df(song_list):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     if len(song_list.keys()) > 1:
         for column in info.select_dtypes(include = numerics).columns:
-            info.at['Album average', column] = info[column].mean()
-    return info
+            info.at['Album average', column] = info[column].astype(float).mean()
+    return info 
 
 #Rudimentary start to print output possibly necessary for gui/end user
 def print_df(df):

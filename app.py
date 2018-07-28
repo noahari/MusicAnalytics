@@ -11,6 +11,7 @@ from flask import Flask, render_template
 import pandas as pd
 from flask import jsonify
 from flask import request
+import banger
 app = Flask(__name__)
 
 
@@ -24,8 +25,10 @@ def index():
         song_list = data_scrape.search_album_id(album, artist)
         df = data_scrape.assemble_df(song_list)
         df = df.drop(['lyrics', 'id', 'word_frequency'], 1)
+        for i, row in df.drop('Album average', 0).iterrows():
+            df.at[i,'Bumps in the whip'] = banger.test(row['track'], artist, 0)
+        df.at['Album average', 'track'] = album + str(' average')
         
-     
         df = df.astype(str)
 
         chart_data = df.to_dict(orient='records')
