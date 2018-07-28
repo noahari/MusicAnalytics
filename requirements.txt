@@ -13,3 +13,4 @@ Werkzeug==0.14.1
 MarkupSafe==1.0
 itsdangerous==0.24
 gunicorn==19.9.0
+scipy==1.0.0
