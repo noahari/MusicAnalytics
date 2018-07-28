@@ -6,7 +6,7 @@ import re
 import nltk
 from textstat.textstat import textstat
 from nltk.sentiment.vader import SentimentIntensityAnalyzer 
-#nltk.download('vader_lexicon')
+nltk.download('vader_lexicon')
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
