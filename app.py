@@ -22,12 +22,9 @@ def index():
         album = request.form.get('album')
         artist = request.form['artist']
         
-        song_list = data_scrape.search_album_id(album, artist)
-        df = data_scrape.assemble_df(song_list)
-        df = df.drop(['lyrics', 'id', 'word_frequency'], 1)
-        for i, row in df.drop('Album average', 0).iterrows():
-            df.at[i,'Bumps in the whip'] = banger.test(row['track'], artist, 0)
-        df.at['Album average', 'track'] = album + str(' average')
+        df = data_scrape.search_album_id(album, artist)
+        df = data_scrape.assemble_df(df)
+
         
         df = df.astype(str)
 

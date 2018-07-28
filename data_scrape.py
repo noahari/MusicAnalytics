@@ -6,11 +6,12 @@ import re
 import nltk
 from textstat.textstat import textstat
 from nltk.sentiment.vader import SentimentIntensityAnalyzer 
-nltk.download('vader_lexicon')
+#nltk.download('vader_lexicon')
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
-
+import banger
+from sklearn.externals import joblib
 
 
 
@@ -44,7 +45,7 @@ def scrape_lyrics(title, artist):
     url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
     source = requests.get(url)
     if source.status_code == 404:
-        print('Could not getting lyrics')
+        print('Could not get lyrics for ' + str(title))
         return 'na'
     source = source.text
     source = source.split('<div class="lyrics">')[1]
@@ -104,72 +105,52 @@ def reading_level(lyrics):
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
 def search_song_id(title, artist):
-    id_holder = {}
-    search = title + ' ' + artist
-    result = sp.search(q = search, limit = 1, type = 'track')
+    result = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')
     result = result['tracks']
     result = result['items'][0]
-    id_holder[(title, artist)] = result['id']
-    return id_holder
+    return result['id']
 
 def search_album_id(album, artist):  
-    id_holder = {}
+    df = pd.DataFrame()
     search = album + ' ' + artist
     result = sp.search(q = search, limit = 1, type = 'album')
     result = result['albums']
     result = result['items'][0]
     tracks = sp.album_tracks(result['id'])
     tracks = tracks['items']
-    for item in tracks:
-        id_holder[(item['name'], artist)] = item['id']
-    return id_holder
+    for i in range(len(tracks)):
+        df.at[i, 'track'] = tracks[i]['name']
+        df.at[i, 'artist'] = artist
+        df.at[i, 'id'] = tracks[i]['id']
+    return df
 
 
-def assemble_df(song_list):
-    info = pd.DataFrame(columns = ('track',
-                                   'lyrics',
-                                   'sentiment',
-                                   'reading_level',
-                                   'word_frequency',
-                                   'acousticness',
-                                   'danceability',
-                                   'duration_s',
-                                   'energy',
-                                   'speechiness',
-                                   'tempo',
-                                   'valence',
-                                   'loudness',
-                                   'liveness',
-                                   'time_signature',
-                                   'id'
-                                   ))
+def assemble_df(df):
+    df['lyrics'] = df.apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
+    df['Lyrical Sentiment'] = df.apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
+    df['Reading Level'] = df.apply(lambda row: reading_level(row['lyrics']) ,1)
+    df['Word Frequency'] = df.apply(lambda row: word_frequency(row['lyrics']) ,1,  )
+    for i, row in df.iterrows():
+        features = sp.audio_features(row['id'])[0]
+        df.at[i, 'Acousticness'] = features['acousticness']
+        df.at[i, 'Danceability'] = features['danceability']
+        df.at[i, 'Duration(s)'] = features['duration_ms'] / 1000
+        df.at[i, 'Energy'] = features['energy']
+        df.at[i, 'Speechiness'] = features['speechiness']
+        df.at[i, 'Tempo'] = features['tempo']
+        df.at[i, 'Positivity'] = features['valence']
+        df.at[i, 'Loudness'] = features['loudness']
+        df.at[i, 'Liveness'] = features['liveness']
+        df.at[i, 'Time Signature'] = features['time_signature']
+
+
+    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
     
-    for tuple in song_list.keys():
-        holder = {}
-        holder['track'] = re.sub("'", '`', tuple[0])
-        lyrics = scrape_lyrics(tuple[0], tuple[1])
-        holder['lyrics'] = lyrics
-        holder['sentiment'] = sentiment_analysis(lyrics)
-        holder['reading_level'] = reading_level(lyrics)
-        holder['word_frequency'] = word_frequency(lyrics)
-        features = sp.audio_features(song_list[tuple])[0]
-        holder['acousticness'] = features['acousticness']
-        holder['danceability'] = features['danceability']
-        holder['duration_s'] = features['duration_ms']/1000
-        holder['energy'] = features['energy']
-        holder['speechiness'] = features['speechiness']
-        holder['tempo'] = features['tempo']
-        holder['valence'] = features['valence']
-        holder['loudness'] = features['loudness']
-        holder['liveness'] = features['liveness']
-        holder['time_signature'] = features['time_signature']
-        holder['id'] = features['id']
-        info = info.append(holder, ignore_index = True)
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-    if len(song_list.keys()) > 1:
-        for column in info.select_dtypes(include = numerics).columns:
-            info.at['Album average', column] = info[column].astype(float).mean()
-    return info 
+    for column in df.select_dtypes(include = numerics).columns:
+        df.at['Album Average', column] = df[column].astype(float).mean()
+    df.at['Album Average', 'track'] = ('Album Average')
+    return df 
 
 #Rudimentary start to print output possibly necessary for gui/end user
 def print_df(df):

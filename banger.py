@@ -4,23 +4,23 @@ import numpy as np
 import data_scrape
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.externals import joblib
+from sklearn.preprocessing import StandardScaler
 
 
 
 
 def train():
-    #term frequency inverse document frequency
-    #svm model to assign banger or not
-    song_list = {}
     df = pd.read_csv('train_data.csv')
-    for i, row in df.iterrows():
-        print(row['Title'])
-        song_list = dict(list(song_list.items()) + list(data_scrape.search_song_id(row['Title'], row['Artist']).items()))
-    total = data_scrape.assemble_df(song_list)
-    total = total.drop('Album average', 0)
+    df['id'] = df.apply(lambda row: data_scrape.search_song_id(row['track'], row['artist']), 1 )
+    df = data_scrape.assemble_df(df)
+    df = df.drop('Album Average', 0)
+    test_df = df.drop(['track', 'artist', 'Label', 'id', 'lyrics', 'Word Frequency'], 1)
+    scaler = StandardScaler()
+    test_df = scaler.fit_transform(test_df)
     clf = RandomForestClassifier()
-    clf.fit(total.drop(['track', 'lyrics', 'id', 'word_frequency'], 1), df['Label'])
+    clf.fit(test_df, df['Label'])
     joblib.dump(clf, 'rf_model.pkl') 
+    joblib.dump(scaler, 'scaler.pkl') 
     
 def percent_bangitude(title, artist):
     
@@ -34,31 +34,11 @@ def percent_bangitude(title, artist):
     return
 
     
-def test(title, artist, albool):
+def test(df):
+    scaler = joblib.load('scaler.pkl')
     clf = joblib.load('rf_model.pkl')
-    if albool == 1:
-        song_list = data_scrape.search_album_id(title, artist)
-    else:
-        song_list = data_scrape.search_song_id(title, artist)
-    total = data_scrape.assemble_df(song_list)
-    total = total.drop(['track', 'lyrics', 'id', 'word_frequency'], 1)
-    if albool == 1:
-        total = total.drop('Album average', 0)
-        output = []
-        #the present error is likely here, due to clf.predict recieving 
-        #an incorrectly shaped array, possibly due to handing it a row instead of a df
-        #possible solution: convert index in loop to df data type before clf.predict
-        confidence = 0
-        count = 1
-        for index,row in total.iterrows():
-            output.append(clf.predict(row))
-            confidence += clf.predict_proba(row)[0][0]
-            count += 1
-        finout = float(sum(output))/float(len(output))
-        confidence = confidence / count
-        #return finout+'% Banger Album'
-        return finout
-    else:    
-        output = clf.predict(total)
-        return output
+    test_df = df.drop(['track', 'artist', 'id', 'lyrics', 'Word Frequency'], 1)
+    test_df = scaler.transform(test_df)
+    return clf.predict(test_df)
+
         
