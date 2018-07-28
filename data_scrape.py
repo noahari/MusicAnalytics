@@ -147,7 +147,7 @@ def assemble_df(song_list):
     
     for tuple in song_list.keys():
         holder = {}
-        holder['track'] = tuple[0]
+        holder['track'] = re.sub("'", '`', tuple[0])
         lyrics = scrape_lyrics(tuple[0], tuple[1])
         holder['lyrics'] = lyrics
         holder['sentiment'] = sentiment_analysis(lyrics)
