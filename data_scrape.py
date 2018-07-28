@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import requests
-import numpy as np
 import re
 import nltk
 from textstat.textstat import textstat
@@ -11,7 +10,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
 import banger
-from sklearn.externals import joblib
 
 
 

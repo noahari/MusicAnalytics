@@ -8,10 +8,7 @@ Created on Wed Jul 25 18:32:34 2018
 import json
 import data_scrape
 from flask import Flask, render_template
-import pandas as pd
-from flask import jsonify
 from flask import request
-import banger
 app = Flask(__name__)
 
 
@@ -25,10 +22,10 @@ def index():
         df = data_scrape.search_album_id(album, artist)
         df = data_scrape.assemble_df(df)
 
-        
-        df = df.astype(str)
+        clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
+        clean = clean.astype(str)
 
-        chart_data = df.to_dict(orient='records')
+        chart_data = clean.to_dict(orient='records')
         data = json.dumps(chart_data)
         data = json.loads(data)
         return render_template("index.html", data = data)
