@@ -1,1 +1,0 @@
-web: runserver app.py
