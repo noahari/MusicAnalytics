@@ -1,1 +1,1 @@
-web: app.py runserver
+web: app.py
