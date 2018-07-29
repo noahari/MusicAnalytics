@@ -1,201 +1,266 @@
 
 
 
+<h1 align = "center">Tune Tables</h1>
 
-
-
-
-<h1 align = "center">TuneTables</h1>
-
-<meta charset="utf-8"/>
 
 <!DOCTYPE html>
-<meta charset="utf-8">
-<style>
+<html>
+<head>
+  <meta http-equiv ="Content-Type" content = "text/html;charset=utf-8"/>
+  <title> Tune Tables </title>
+  <style type ="text/css">
 
 svg {
   font: 10px sans-serif;
 }
 
-.background path {
-  fill: none;
-  stroke: #ddd;
-  shape-rendering: crispEdges;
+canvas, svg {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.foreground path {
-  fill: none;
-  stroke: steelblue;
+#chart {
+  position: relative;
 }
 
 .brush .extent {
-  fill-opacity: .3;
-  stroke: #fff;
-  shape-rendering: crispEdges;
+fill-opacity: .3;
+stroke: #fff;
+shape-rendering: crispEdges;
 }
-
-.axis line,
-.axis path {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
+.axis line, .axis path {
+fill: none;
+stroke: #000;
+shape-rendering: crispEdges;
 }
 
 .axis text {
-  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  text-shadow: 0 1px 0 #fff;
+  cursor: move;
+  -webkit-text-stroke: 1px #fff;
+  color: black;
+}
+text{
   cursor: move;
 }
 
 </style>
+</head>
 <body>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script>
+  <div id = "chart">
+    <canvas id = "foreground"></canvas>
+    <svg></svg>
+  </div>
+  <script type = "text/javascript" src = "http://d3js.org/d3.v5.js"></script>
+  <script type = "text/javascript">
 
-var margin = {top: 30, right: 10, bottom: 10, left: 10},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+  window.requestAnimFrame = (function(){
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+    function( callback ){
+      window.setTimeout(callback, 1000 / 60);
+    };
+  })();
 
-var x = d3.scale.ordinal().rangePoints([0, width], 1),
-    y = {},
-    dragging = {};
+var m = [30, 10, 10, 10],
+w = 1200 - m[1] - m[3],
+h = 700 - m[0] - m[2];
 
-var line = d3.svg.line(),
-    axis = d3.svg.axis().orient("left"),
-    background,
-    foreground;
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var x = d3.scaleBand().range([0,w]),
+y = {};
+var dragging = {}
 
-//d3.csv("cars.csv", function(error, cars) {
-function draw_graph(data){
+var line = d3.line(),
+axis = d3.axisLeft(),
+foreground,
+dimensions,
+brush_count = 0;
 
-  // Extract the list of dimensions and create a scale for each.
-  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
-
-      if(d === "name") return false;
-
-      if(d === "track") {
-          y[d] = d3.scale.ordinal()
-            .domain(data.map(function(p) { return p[d]; }))
-            .rangePoints([height, 0]);
-
-      }
-      else {
-          y[d] = d3.scale.linear()
-            .domain(d3.extent(data, function(p) { return +p[d]; }))
-            .range([height, 0]);
-      }
-
-      return true;
-  }));
-
-  // Add grey background lines for context.
-  background = svg.append("g")
-      .attr("class", "background")
-    .selectAll("path")
-      .data(data)
-    .enter().append("path")
-      .attr("d", path);
-
-  // Add blue foreground lines for focus.
-  foreground = svg.append("g")
-      .attr("class", "foreground")
-    .selectAll("path")
-      .data(data)
-    .enter().append("path")
-      .attr("d", path);
-
-  // Add a group element for each dimension.
-  var g = svg.selectAll(".dimension")
-      .data(dimensions)
-    .enter().append("g")
-      .attr("class", "dimension")
-      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
-      .call(d3.behavior.drag()
-        .origin(function(d) { return {x: x(d)}; })
-        .on("dragstart", function(d) {
-          dragging[d] = x(d);
-          background.attr("visibility", "hidden");
-        })
-        .on("drag", function(d) {
-          dragging[d] = Math.min(width, Math.max(0, d3.event.x));
-          foreground.attr("d", path);
-          dimensions.sort(function(a, b) { return position(a) - position(b); });
-          x.domain(dimensions);
-          g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
-        })
-        .on("dragend", function(d) {
-          delete dragging[d];
-          transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
-          transition(foreground).attr("d", path);
-          background
-              .attr("d", path)
-            .transition()
-              .delay(500)
-              .duration(0)
-              .attr("visibility", null);
-        }));
-
-  // Add an axis and title.
-  g.append("g")
-      .attr("class", "axis")
-      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
-    .append("text")
-      .style("text-anchor", "middle")
-      .attr("y", -9)
-      .text(function(d) { return d; });
-
-  // Add and store a brush for each axis.
-  g.append("g")
-      .attr("class", "brush")
-      .each(function(d) {
-        d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
-      })
-    .selectAll("rect")
-      .attr("x", -8)
-      .attr("width", 16);
+var colors = {
+  "1": "hsla(0, 100%, 70%, .5)",
+  "0": "hsla(240, 100%, 70%, .5)"
 };
-//});
 
-function position(d) {
+d3.selectAll("canvas")
+  .attr("width",w + m[1] + m[3])
+  .attr("height", h + m[0] + m[2])
+  .style("padding", m.join("px ") + "px");
+
+  foreground = document.getElementById('foreground').getContext('2d');
+
+  foreground.strokeStyle = "rgba(0,100,160,.75)";
+
+  var svg = d3.select("svg")
+  .attr("width", w + m[1] + m[3])
+  .attr("height", h + m[0] + m[2])
+  .append('svg:g')
+  .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+var quant_p = function(v){return (parseFloat(v) == v) || (v == "")};
+
+//function draw_graph(data){
+function draw_graph(data){
+  console.log(data[0])
+  x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
+    return d != "" && (y[d] = d3.scaleLinear()
+  .domain(d3.extent(data, function(p) { return +p[d]; }))
+  .range([h, 0]));
+}));
+
+
+dimensions.forEach(function(d){
+var vals = data.map(function(p) { return p[d]; });
+if (vals.every(quant_p)){
+  y[d] = d3.scaleLinear()
+  .domain(d3.extent(vals.map(function(p){ return +p})))
+  .range([h, 0]);}
+  else{
+    y[d] = d3.scalePoint()
+    .domain(vals.filter(function(v, i) {return vals.indexOf(v) == i;}))
+    .range([h, 0], 1);}
+})
+paths(data, foreground, brush_count);
+
+var g = svg.selectAll(".dimension")
+.data(dimensions)
+.enter().append("svg:g")
+.attr("class", "dimension")
+.attr("transform", function(d)  {
+  return "translate(" + x(d) +")";
+})
+  .call(d3.drag()
+  .on("start", function(d)  {
+    dragging[d] = this.__origin__ = x(d);
+  })
+  .on("drag", function(d){
+    dragging[d] = Math.min(w, Math.max(0, this.__origin__ +=  d3.event.dx));
+    dimensions.sort(function(a, b) {
+      return position(a) - position(b);
+    });
+    x.domain(dimensions);
+    g.attr("transform", function(d){
+      return "translate(" + position(d) + ")";
+    })
+  })
+.on("end", function(d){
+  delete this.__origin__;
+  delete dragging[d];
+  transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+  brush()
+
+}));
+function transition(g){
+  return g.transition().duration(500);
+}
+function position(d){
   var v = dragging[d];
   return v == null ? x(d) : v;
 }
 
-function transition(g) {
-  return g.transition().duration(500);
-}
 
-// Returns the path for a given data point.
-function path(d) {
-  return line(dimensions.map(function(p) { return [position(p), y[p](d[p])]; }));
-}
+g.append("svg:g")
+.attr("class", "axis")
+.each(function(d) {d3.select(this).call(d3.axisRight(y[d]));
+});
 
-function brushstart() {
-  d3.event.sourceEvent.stopPropagation();
-}
+g.append("svg:text")
+.attr("text-anchor", "middle")
+.attr("y", -9)
+.text(String);
 
-// Handles a brush event, toggling the display of foreground lines.
+g.append("svg:g")
+.attr("class", "brush")
+.each(function(d){
+  d3.select(this).call(y[d].brush = d3.brushY().extent([[-10,0], [10, h]]).on('brush', brush).on("end", brush));
+})
+.selectAll("rect")
+.attr("x", -12)
+.attr("width", 24);
+
+
 function brush() {
-  var actives = dimensions.filter(function(p) { return !y[p].brush.empty(); }),
-      extents = actives.map(function(p) { return y[p].brush.extent(); });
-  foreground.style("display", function(d) {
-    return actives.every(function(p, i) {
-      return extents[i][0] <= d[p] && d[p] <= extents[i][1];
-    }) ? null : "none";
+  brush_count++;
+  var actives = [];
+  var extents = [];
+  svg.selectAll(".brush")
+  .filter(function(d) {
+    return d3.brushSelection(this);
+  })
+  .each(function(d){
+    actives.push(
+      d,
+    );
+    extents.push(
+      d3.brushSelection(this)
+    )
   });
+  var selected = [];
+  data.map(function(d) {
+    return actives.every(function(p, i) {
+      var p_new = y[p](d[p]);
+      return extents[i][0] <=p_new && p_new <= extents[i][1];
+    }) ? selected.push(d) : null;
+  });
+
+  foreground.clearRect(0,0, w+1, h+1);
+  paths(selected, foreground, brush_count);
 }
 
+function paths(data, ctx, count){
+  var n = data.length,
+  i = 0,
+   reset = false;
+   function render() {
+     var max = d3.min([i+60, n]);
+     data.slice(i, max).forEach(function(d){
+       path(d, foreground, colors[d.Label]);
+     });
+     i = max;
+   };
+   (function animloop(){
+     if (i >= n || count < brush_count) return;
+     requestAnimFrame(animloop);
+     render();
+   })();
+};
 
- var data = "{{ data|safe  }}";
+};
+
+function path(d, ctx, color){
+  if (color) ctx.strokeStyle = color;
+  ctx.beginPath();
+  dimensions.map(function(p,i){
+    if (d[p] == ""){
+      return [x(p), null]
+    } else if(i==0){
+      ctx.moveTo(x(p), y[p](d[p]));
+    } else{
+      ctx.lineTo(x(p), y[p](d[p]));
+    }
+  });
+  ctx.stroke();
+};
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+<script>
+
+var data = "{{ data|safe  }}";
 
 var data = JSON.parse('{{ data | tojson | safe}}');
-console.log(data);
 
 
-draw_graph(data);
+
+draw_graph(data)
+
+
 </script>
