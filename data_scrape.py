@@ -134,7 +134,7 @@ def assemble_df(df):
         df.at[i, 'Danceability'] = features['danceability']
         df.at[i, 'Duration(s)'] = features['duration_ms'] / 1000
         df.at[i, 'Energy'] = features['energy']
-        df.at[i, 'Speechiness'] = features['speechiness']
+        df.at[i, 'Verbosity'] = features['speechiness']
         df.at[i, 'Tempo'] = features['tempo']
         df.at[i, 'Positivity'] = features['valence']
         df.at[i, 'Loudness'] = features['loudness']
