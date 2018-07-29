@@ -117,7 +117,7 @@ def search_album_id(album, artist):
     tracks = sp.album_tracks(result['id'])
     tracks = tracks['items']
     for i in range(len(tracks)):
-        df.at[i, 'track'] = tracks[i]['name']
+        df.at[i, 'track'] = re.sub("'","`", tracks[i]['name'])
         df.at[i, 'artist'] = artist
         df.at[i, 'id'] = tracks[i]['id']
     return df
