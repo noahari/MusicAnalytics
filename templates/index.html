@@ -94,6 +94,10 @@ text{
           var index = data.indexOf(selected[i])
           data.splice(index,1);
         }
+        svg.selectAll("*").remove();
+        foreground.clearRect(0,0, w+1, h+1);
+        draw_graph(data);
+
       }
 
       </script>
@@ -155,7 +159,6 @@ d3.selectAll("canvas")
 var quant_p = function(v){return (parseFloat(v) == v) || (v == "")};
 
 function draw_graph(data){
-  console.log(data[0])
   x.domain(dimensions = d3.keys(data[0]).filter(function(d) {
     return d != "" && (y[d] = d3.scaleLinear()
   .domain(d3.extent(data, function(p) { return +p[d]; }))
