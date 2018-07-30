@@ -17,8 +17,8 @@ app = Flask(__name__)
 def index():
     
     if request.method == 'POST':  #this block is only entered when the form is submitted
-        album = request.form.get('Album')
-        artist = request.form['Artist']
+        album = request.form.get('album')
+        artist = request.form['artist']
 
         df = data_scrape.search_album_id(album, artist)
         df = data_scrape.assemble_df(df)
