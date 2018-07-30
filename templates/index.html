@@ -43,15 +43,25 @@ text{
   cursor: move;
 }
 
-<!--
-#form {
-    height: 400px;
+#form .fixed{
+  position: fixed;
+    height: 600px;
     width: 600px;
-}
--->
+    }
 </style>
 </head>
 <body>
+
+    <div id = "form">
+    <form method="POST">
+      Title:<br>
+      <input type="text" name="album"><br>
+      Artist:<br>
+      <input type="text" name="artist">
+      <input type="submit" value="Submit">
+    </form>
+    </div>
+
     <div id = "chart">
     <canvas id = "foreground"></canvas>
     <svg></svg>
@@ -248,16 +258,7 @@ function path(d, ctx, color){
 
 
 </script>
-<!---
-<div id = "form">
-<form>
-  Title:<br>
-  <input type="text" name="firstname"><br>
-  Artist:<br>
-  <input type="text" name="lastname">
-</form>
-</div>
---->
+
 </body>
 </html>
 
