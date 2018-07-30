@@ -1,0 +1,11 @@
+*adding and removing songs/albums
+7/8
+*upgrading html to be more user friendly
+7/17
+*adding donate button
+7/21
+*beta test(25)
+*add more features(lyrics, top 100 songs, etc)
+8/31
+*fix markdown file/send link to reddit
+9/1
