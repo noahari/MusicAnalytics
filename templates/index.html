@@ -66,10 +66,44 @@ text{
   </div>
 
     <div id == "AddDelete">
-    <input id="Add" type="button" value="Add" <!--onclick="doFunction();"--> />    
-    <input id="Delete" type="button" value="Delete" <!--onclick="doFunction();" --> />
+      <script>
+      function delete_track(){
+        var actives = [];
+        var extents = [];
+        svg.selectAll(".brush")
+        .filter(function(d) {
+          return d3.brushSelection(this);
+        })
+        .each(function(d){
+          actives.push(
+            d,
+          );
+          extents.push(
+            d3.brushSelection(this)
+          )
+        });
+        var selected = [];
+
+        data.map(function(d) {
+          return actives.every(function(p, i) {
+            var p_new = y[p](d[p]);
+            return extents[i][0] <=p_new && p_new <= extents[i][1];
+          }) ? selected.push(d) : null;
+      });
+        for (var i = 0; i < selected.length; i++){
+          var index = data.indexOf(selected[i])
+          data.splice(index,1);
+        }
+      }
+
+      </script>
+
+
+
+    <input id="Add" type="button" value="Add" onclick="doFunction();" />
+    <input id="Delete" type="button" value="Delete" onclick="delete_track();" />
     </div>
-    
+
     <div id = "chart">
     <canvas id = "foreground"></canvas>
     <svg></svg>
@@ -225,35 +259,9 @@ function brush() {
 
   foreground.clearRect(0,0, w+1, h+1);
   paths(selected, foreground, brush_count);
-  delete_track();
 }
 
-function delete_track(){
-  var actives = [];
-  var extents = [];
-  svg.selectAll(".brush")
-  .filter(function(d) {
-    return d3.brushSelection(this);
-  })
-  .each(function(d){
-    actives.push(
-      d,
-    );
-    extents.push(
-      d3.brushSelection(this)
-    )
-  });
-  var selected = [];
 
-  data.map(function(d) {
-    return actives.every(function(p, i) {
-      var p_new = y[p](d[p]);
-      return extents[i][0] <=p_new && p_new <= extents[i][1];
-    }) ? selected.push(d) : null;
-});
-  return selected
-
-}
 
 
 function paths(data, ctx, count){
