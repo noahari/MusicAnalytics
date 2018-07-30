@@ -31,11 +31,9 @@ def index():
         return render_template("index.html", data = data)
         
 
-    return '''<form method="POST">
-                  album: <input type="text" name="album"><br>
-                  artist: <input type="text" name="artist"><br>
-                  <input type="submit" value="Submit"><br>
-              </form>'''
+    return render_template("index.html", data = [{'Enter a song':1}])
+
+
 
 
 
