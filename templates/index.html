@@ -93,7 +93,7 @@ text{
   <form method="POST">
     Album:<br>
     <input type="text" name="album">
-    <input id="Add" type="button" value="Add" onclick="doFunction();" />
+    <input id="Add" type="button" value="Add" onclick="add_track();" />
     <input id="Delete" type="button" value="Delete" onclick="delete_track();" /><br>
     Artist:<br>
     <input type="text" name="artist">
@@ -296,7 +296,19 @@ function path(d, ctx, color){
 };
 
 
-
+function add_track(){
+    console.log(data);
+    var old = JSON.stringify(data);
+    var newdata = JSON.parse('{{ data | tojson | safe}}');
+    newdata = JSON.stringify(newdata);
+    combo = newdata + old
+    data = combo.replace("][",",")
+    console.log(data);
+    data = JSON.parse(data);
+    svg.selectAll("*").remove();
+    foreground.clearRect(0,0, w+1, h+1);
+    draw_graph(data);
+}
 
 </script>
 
@@ -308,7 +320,6 @@ function path(d, ctx, color){
 
 <script>
 
-var data = "{{ data|safe  }}";
 
 var data = JSON.parse('{{ data | tojson | safe}}');
 
