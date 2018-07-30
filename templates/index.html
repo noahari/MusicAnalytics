@@ -56,17 +56,7 @@ text{
 
 
   <div id = "form">
-  <form method="POST">
-    Album:<br>
-    <input type="text" name="album"><br>
-    Artist:<br>
-    <input type="text" name="artist">
-    <input type="submit" value="Add tracks!"><br>
-  </form>
-  </div>
-
-    <div id == "AddDelete">
-      <script>
+        <script>
       function delete_track(){
         var actives = [];
         var extents = [];
@@ -99,14 +89,17 @@ text{
         draw_graph(data);
 
       }
-
-      </script>
-
-
-
+    </script>
+  <form method="POST">
+    Album:<br>
+    <input type="text" name="album">
     <input id="Add" type="button" value="Add" onclick="doFunction();" />
-    <input id="Delete" type="button" value="Delete" onclick="delete_track();" />
-    </div>
+    <input id="Delete" type="button" value="Delete" onclick="delete_track();" /><br>
+    Artist:<br>
+    <input type="text" name="artist">
+    <input type="submit" value="Add tracks!"><br>
+  </form>
+  </div>
 
     <div id = "chart">
     <canvas id = "foreground"></canvas>
