@@ -56,19 +56,21 @@ text{
 
 
   <div id = "form">
-
   <form method="POST">
-    Album:<br>
-    <input type="text" name="album">
-    Song:
-    <input type="text" name="song"><br>
-    Artist:<br>
-    <input type="text" name="artist">
-    <input id="Add" type="button" value="Add tracks to queue" onclick="add_track();"><br>
-    <br>
-    <input type="submit" value="Push queue to graph"><br>
+  <label for="song">Song:</label>
+  <input id = "song" name = "song" size = "20" type = "text" value = "">
+  <label for="album">Album:</label>
+  <input id = "album" name = "album" size = "20" type = "text" value = "">
+  <label for="artist">Artist:</label>
+  <input id = "artist" name = "artist" size = "20" type = "text" value = ""><br>
+  <br>
+<input id="Add" type="button" value="Add tracks to queue" onclick="add_track();">
+<input type="submit" value="Push queue to graph"><br>
   </form>
   </div>
+
+
+
 
     <div id = "chart">
     <canvas id = "foreground"></canvas>
