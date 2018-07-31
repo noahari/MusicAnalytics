@@ -10,6 +10,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
 import banger
+import timeit
 
 
 
@@ -116,6 +117,22 @@ def search_album_id(album, artist):
     result = result['items'][0]
     tracks = sp.album_tracks(result['id'])
     tracks = tracks['items']
+    dfloc = df.at
+    for i in range(len(tracks)):
+        dfloc[i, 'track'] = re.sub("'","`", tracks[i]['name'])
+        dfloc[i, 'artist'] = artist
+        dfloc[i, 'id'] = tracks[i]['id']
+    return df
+
+
+def search_album_id_deprecated(album, artist):  
+    df = pd.DataFrame()
+    search = album + ' ' + artist
+    result = sp.search(q = search, limit = 1, type = 'album')
+    result = result['albums']
+    result = result['items'][0]
+    tracks = sp.album_tracks(result['id'])
+    tracks = tracks['items']
     for i in range(len(tracks)):
         df.at[i, 'track'] = re.sub("'","`", tracks[i]['name'])
         df.at[i, 'artist'] = artist
@@ -124,6 +141,35 @@ def search_album_id(album, artist):
 
 
 def assemble_df(df):
+    apply = df.apply;
+    dfloc = df.at;
+    df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
+    df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
+    df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
+    df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1,  )
+    for i, row in df.iterrows():
+        features = sp.audio_features(row['id'])[0]
+        dfloc[i, 'Acousticness'] = features['acousticness']
+        dfloc[i, 'Danceability'] = features['danceability']
+        dfloc[i, 'Duration(s)'] = features['duration_ms'] / 1000
+        dfloc[i, 'Energy'] = features['energy']
+        dfloc[i, 'Verbosity'] = features['speechiness']
+        dfloc[i, 'Tempo'] = features['tempo']
+        dfloc[i, 'Positivity'] = features['valence']
+        dfloc[i, 'Loudness'] = features['loudness']
+        dfloc[i, 'Liveness'] = features['liveness']
+        dfloc[i, 'Time Signature'] = features['time_signature']
+
+
+    #df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+#    
+#    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+#    for column in df.select_dtypes(include = numerics).columns:
+#        df.at['Album Average', column] = df[column].astype(float).mean()
+#    df.at['Album Average', 'track'] = ('Album Average')
+#    return df 
+
+def assemble_df_deprecated(df):
     df['lyrics'] = df.apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = df.apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = df.apply(lambda row: reading_level(row['lyrics']) ,1)
@@ -142,16 +188,33 @@ def assemble_df(df):
         df.at[i, 'Time Signature'] = features['time_signature']
 
 
-    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
-    
-    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-    for column in df.select_dtypes(include = numerics).columns:
-        df.at['Album Average', column] = df[column].astype(float).mean()
-    df.at['Album Average', 'track'] = ('Album Average')
-    return df 
+    #df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+#    
+#    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+#    for column in df.select_dtypes(include = numerics).columns:
+#        df.at['Album Average', column] = df[column].astype(float).mean()
+#    df.at['Album Average', 'track'] = ('Album Average')
+#    return df 
+
+
 
 #Rudimentary start to print output possibly necessary for gui/end user
 def print_df(df):
     with pd.option_context('display.max_rows', None, 'display.max_columns', 3):
         print(df)
     return
+#TESTING--------------------------------------
+def wrapper(func, *args, **kwargs):
+    def wrapped():
+        return func(*args, **kwargs)
+    return wrapped    
+
+#wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
+#wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
+df = search_album_id("Saturation", "Brockhampton");
+wrapped = wrapper(assemble_df, df)
+wrappeddep = wrapper(assemble_df_deprecated, df)
+
+
+timed = timeit.timeit(wrapped, number=1);
+timeddep = timeit.timeit(wrappeddep, number=1);
