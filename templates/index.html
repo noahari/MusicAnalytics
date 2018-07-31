@@ -64,13 +64,16 @@ text{
   <label for="artist">Artist:</label>
   <input id = "artist" name = "artist" size = "20" type = "text" value = ""><br>
   <br>
+  <input type=hidden name=queue value="" />
 <input id="Add" type="button" value="Add tracks to queue" onclick="add_track();">
 <input type="submit" value="Push queue to graph"><br>
   </form>
   </div>
 
-
-
+<!---
+oFormObject.elements["username"].value = 'Jon Lord';
+to pass the queue to the hidden html variable
+-->
 
     <div id = "chart">
     <canvas id = "foreground"></canvas>
