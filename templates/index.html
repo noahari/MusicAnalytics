@@ -56,48 +56,17 @@ text{
 
 
   <div id = "form">
-        <script>
-      function delete_track(){
-        var actives = [];
-        var extents = [];
-        svg.selectAll(".brush")
-        .filter(function(d) {
-          return d3.brushSelection(this);
-        })
-        .each(function(d){
-          actives.push(
-            d,
-          );
-          extents.push(
-            d3.brushSelection(this)
-          )
-        });
-        var selected = [];
 
-        data.map(function(d) {
-          return actives.every(function(p, i) {
-            var p_new = y[p](d[p]);
-            return extents[i][0] <=p_new && p_new <= extents[i][1];
-          }) ? selected.push(d) : null;
-      });
-        for (var i = 0; i < selected.length; i++){
-          var index = data.indexOf(selected[i])
-          data.splice(index,1);
-        }
-        svg.selectAll("*").remove();
-        foreground.clearRect(0,0, w+1, h+1);
-        draw_graph(data);
-
-      }
-    </script>
   <form method="POST">
     Album:<br>
     <input type="text" name="album">
-    <input id="Add" type="button" value="Add Tracks!" onclick="add_track();" />
-    <input id="Delete" type="button" value="Delete Tracks!" onclick="delete_track();" /><br>
+    Song:
+    <input type="text" name="song"><br>
     Artist:<br>
     <input type="text" name="artist">
-    <input type="submit" value="New Album!"><br>
+    <input id="Add" type="button" value="Add tracks to queue" onclick="add_track();"><br>
+    <br>
+    <input type="submit" value="Push queue to graph"><br>
   </form>
   </div>
 
@@ -310,9 +279,51 @@ function add_track(){
     draw_graph(data);
 }
 
-</script>
+function delete_track(){
+  var actives = [];
+  var extents = [];
+  svg.selectAll(".brush")
+  .filter(function(d) {
+    return d3.brushSelection(this);
+  })
+  .each(function(d){
+    actives.push(
+      d,
+    );
+    extents.push(
+      d3.brushSelection(this)
+    )
+  });
+  var selected = [];
 
+  data.map(function(d) {
+    return actives.every(function(p, i) {
+      var p_new = y[p](d[p]);
+      return extents[i][0] <=p_new && p_new <= extents[i][1];
+    }) ? selected.push(d) : null;
+});
+  for (var i = 0; i < selected.length; i++){
+    var index = data.indexOf(selected[i])
+    data.splice(index,1);
+  }
+  svg.selectAll("*").remove();
+  foreground.clearRect(0,0, w+1, h+1);
+  draw_graph(data);
+
+}
+
+
+
+
+
+
+
+
+
+</script>
+  <input id="Delete" type="button" value="Delete Tracks!" onclick="delete_track();" /><br>
 </body>
+
 </html>
 
 
