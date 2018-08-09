@@ -65,7 +65,7 @@ text{
   <input id = "artist" name = "artist" size = "20" type = "text" value = ""><br>
   <br>
   <input type=hidden name=queue value="" />
-<input id="Add" type="button" value="Add tracks to queue" onclick="add_track();">
+<input id="Add" type="button" value="Add tracks to queue" onclick="add_to_queue();">
 <input type="submit" value="Push queue to graph"><br>
   </form>
   </div>
@@ -317,7 +317,37 @@ function delete_track(){
 
 }
 
+var queue = "";
 
+function add_to_queue(){
+    var songname = document.getElementById("song").value;
+    var albumname = document.getElementById("album").value;
+    var artist = document.getElementById("artist").value;
+    var sVa = "null";
+    if (!((songname == "") || (albumname == ""))){
+        console.log("error, dual input");
+        return;
+    }
+    else if (artist == ""){
+        console.log("error, no artist");
+        return;
+    }
+    else if (!(albumname == "")){
+        sVa = "album";
+        var addition = albumname + "." + artist + "." + sVa;
+    }
+    else if (!(songname == "")){
+        sVa = "song";
+        var addition = songname + "." + artist + "." + sVa;        
+    }
+    if (queue == ""){
+    queue = addition
+    }
+    else{
+    queue = queue + "--" + addition;
+    }
+    console.log(queue);
+}
 
 
 

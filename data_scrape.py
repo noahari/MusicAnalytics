@@ -161,13 +161,13 @@ def assemble_df(df):
         dfloc[i, 'Time Signature'] = features['time_signature']
 
 
-    #df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
-#    
-#    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-#    for column in df.select_dtypes(include = numerics).columns:
-#        df.at['Album Average', column] = df[column].astype(float).mean()
-#    df.at['Album Average', 'track'] = ('Album Average')
-#    return df 
+    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+    
+    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    for column in df.select_dtypes(include = numerics).columns:
+        df.at['Album Average', column] = df[column].astype(float).mean()
+    df.at['Album Average', 'track'] = ('Album Average')
+    return df 
 
 def assemble_df_deprecated(df):
     df['lyrics'] = df.apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
@@ -188,13 +188,13 @@ def assemble_df_deprecated(df):
         df.at[i, 'Time Signature'] = features['time_signature']
 
 
-    #df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
-#    
-#    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-#    for column in df.select_dtypes(include = numerics).columns:
-#        df.at['Album Average', column] = df[column].astype(float).mean()
-#    df.at['Album Average', 'track'] = ('Album Average')
-#    return df 
+    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+    
+    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+    for column in df.select_dtypes(include = numerics).columns:
+        df.at['Album Average', column] = df[column].astype(float).mean()
+    df.at['Album Average', 'track'] = ('Album Average')
+    return df 
 
 
 
@@ -204,17 +204,18 @@ def print_df(df):
         print(df)
     return
 #TESTING--------------------------------------
-def wrapper(func, *args, **kwargs):
-    def wrapped():
-        return func(*args, **kwargs)
-    return wrapped    
 
-#wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
-#wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
-df = search_album_id("Saturation", "Brockhampton");
-wrapped = wrapper(assemble_df, df)
-wrappeddep = wrapper(assemble_df_deprecated, df)
-
-
-timed = timeit.timeit(wrapped, number=1);
-timeddep = timeit.timeit(wrappeddep, number=1);
+#def wrapper(func, *args, **kwargs):
+#    def wrapped():
+#        return func(*args, **kwargs)
+#    return wrapped    
+#
+##wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
+##wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
+#df = search_album_id("Saturation", "Brockhampton");
+#wrapped = wrapper(assemble_df, df)
+#wrappeddep = wrapper(assemble_df_deprecated, df)
+#
+#
+#timed = timeit.timeit(wrapped, number=1);
+#timeddep = timeit.timeit(wrappeddep, number=1);
