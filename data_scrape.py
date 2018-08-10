@@ -14,12 +14,6 @@ import timeit
 
 
 
-
-
-
-
-
-
 client_id = '91df6ca120d7407a877a64fabb100b49'
 client_secret = '05a35b3ad63948c398d82dc8251d2bfb'
 
@@ -111,12 +105,7 @@ def search_song_id(title, artist):
 
 def search_album_id(album, artist):  
     df = pd.DataFrame()
-    search = album + ' ' + artist
-    result = sp.search(q = search, limit = 1, type = 'album')
-    result = result['albums']
-    result = result['items'][0]
-    tracks = sp.album_tracks(result['id'])
-    tracks = tracks['items']
+    tracks = sp.album_tracks(sp.search(q = album + ' ' + artist, limit = 1, type = 'album')['albums']['items'][0]['id'])['items']
     dfloc = df.at
     for i in range(len(tracks)):
         dfloc[i, 'track'] = re.sub("'","`", tracks[i]['name'])
@@ -127,8 +116,7 @@ def search_album_id(album, artist):
 
 def search_album_id_deprecated(album, artist):  
     df = pd.DataFrame()
-    search = album + ' ' + artist
-    result = sp.search(q = search, limit = 1, type = 'album')
+    result = sp.search(q = album + ' ' + artist, limit = 1, type = 'album')
     result = result['albums']
     result = result['items'][0]
     tracks = sp.album_tracks(result['id'])
@@ -141,8 +129,8 @@ def search_album_id_deprecated(album, artist):
 
 
 def assemble_df(df):
-    apply = df.apply;
-    dfloc = df.at;
+    apply = df.apply
+    dfloc = df.at
     df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
@@ -161,8 +149,7 @@ def assemble_df(df):
         dfloc[i, 'Time Signature'] = features['time_signature']
 
 
-    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
-    
+  #  df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in df.select_dtypes(include = numerics).columns:
         df.at['Album Average', column] = df[column].astype(float).mean()
@@ -188,7 +175,7 @@ def assemble_df_deprecated(df):
         df.at[i, 'Time Signature'] = features['time_signature']
 
 
-    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+   # df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
     
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in df.select_dtypes(include = numerics).columns:
@@ -198,24 +185,21 @@ def assemble_df_deprecated(df):
 
 
 
-#Rudimentary start to print output possibly necessary for gui/end user
-def print_df(df):
-    with pd.option_context('display.max_rows', None, 'display.max_columns', 3):
-        print(df)
-    return
+
 #TESTING--------------------------------------
 
-#def wrapper(func, *args, **kwargs):
-#    def wrapped():
-#        return func(*args, **kwargs)
-#    return wrapped    
-#
-##wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
-##wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
-#df = search_album_id("Saturation", "Brockhampton");
-#wrapped = wrapper(assemble_df, df)
-#wrappeddep = wrapper(assemble_df_deprecated, df)
-#
-#
-#timed = timeit.timeit(wrapped, number=1);
-#timeddep = timeit.timeit(wrappeddep, number=1);
+def wrapper(func, *args, **kwargs):
+    def wrapped():
+        return func(*args, **kwargs)
+    return wrapped    
+
+#wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
+#wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
+df = search_album_id("saturation", "brockhampton")
+print(df.head)
+wrapped = wrapper(assemble_df, df)
+wrappeddep = wrapper(assemble_df_deprecated, df)
+
+
+timed = timeit.timeit(wrapped, number=10);
+timeddep = timeit.timeit(wrappeddep, number=10);

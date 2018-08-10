@@ -270,7 +270,7 @@ function path(d, ctx, color){
 };
 
 
-function add_track(){
+function push_queue(){
     console.log(data);
     var old = JSON.stringify(data);
     var newdata = JSON.parse('{{ data | tojson | safe}}');
@@ -338,7 +338,7 @@ function add_to_queue(){
     }
     else if (!(songname == "")){
         sVa = "song";
-        var addition = songname + "." + artist + "." + sVa;        
+        var addition = songname + "." + artist + "." + sVa;
     }
     if (queue == ""){
     queue = addition
