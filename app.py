@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 25 18:32:34 2018
-
-@author: skhos
-"""
 
 import json
 import data_scrape
