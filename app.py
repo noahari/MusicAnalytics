@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 25 18:32:34 2018
-
-@author: skhos
-"""
 
 import json
 import data_scrape
@@ -17,12 +12,17 @@ app = Flask(__name__)
 def index():
     
     if request.method == 'POST':  #this block is only entered when the form is submitted
-        album = request.form.get('album')
-        artist = request.form['artist']
-
-        df = data_scrape.search_album_id(album, artist)
-        df = data_scrape.assemble_df(df)
-
+        
+        array = request.args.get("queue")
+        return render_template("index.html", data = array)
+    
+#        for items in array:
+#            if (array[items][2] = 0):    
+#                df = data_scrape.search_album_id(array[items][0], array[items][1])
+#            else if (array[items][2] = 1):
+#                df = data_scrape.search_album_id(array[items][0], array[items][1])    
+#        df = data_scrape.assemble_df(df)
+        
         clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
         clean = clean.astype(str)
 
@@ -34,6 +34,10 @@ def index():
     return render_template("index.html", data = [{'Enter a song':1}])
 
 
+
+
+if request.method == 'POST':
+    array = request.args.get("queue")
 
 
 if __name__ == "__main__":

@@ -317,13 +317,13 @@ function delete_track(){
 
 }
 
-var queue = "";
+var queue = [];
 
 function add_to_queue(){
     var songname = document.getElementById("song").value;
     var albumname = document.getElementById("album").value;
     var artist = document.getElementById("artist").value;
-    var sVa = "null";
+    var sVa = -1;
     if (!((songname == "") || (albumname == ""))){
         console.log("error, dual input");
         return;
@@ -333,20 +333,19 @@ function add_to_queue(){
         return;
     }
     else if (!(albumname == "")){
-        sVa = "album";
-        var addition = albumname + "." + artist + "." + sVa;
+        sVa = 0;
+        var addition = [albumname, artist, sVa];
     }
     else if (!(songname == "")){
-        sVa = "song";
-        var addition = songname + "." + artist + "." + sVa;
+        sVa = 1;
+        var addition = [songname, artist, sVa];
     }
-    if (queue == ""){
-    queue = addition
-    }
-    else{
-    queue = queue + "--" + addition;
-    }
+    queue.push(addition);
     console.log(queue);
+}
+
+function undo_add(){
+    queue.pop();
 }
 
 

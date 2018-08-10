@@ -187,19 +187,19 @@ def assemble_df_deprecated(df):
 
 
 #TESTING--------------------------------------
-
-def wrapper(func, *args, **kwargs):
-    def wrapped():
-        return func(*args, **kwargs)
-    return wrapped    
-
-#wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
-#wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
-df = search_album_id("saturation", "brockhampton")
-print(df.head)
-wrapped = wrapper(assemble_df, df)
-wrappeddep = wrapper(assemble_df_deprecated, df)
-
-
-timed = timeit.timeit(wrapped, number=10);
-timeddep = timeit.timeit(wrappeddep, number=10);
+#
+#def wrapper(func, *args, **kwargs):
+#    def wrapped():
+#        return func(*args, **kwargs)
+#    return wrapped    
+#
+##wrapped = wrapper(search_album_id, "Saturation", "Brockhampton")
+##wrappeddep = wrapper(search_album_id_deprecated, "Saturation", "Brockhampton")
+#df = search_album_id("saturation", "brockhampton")
+#print(df.head)
+#wrapped = wrapper(assemble_df, df)
+#wrappeddep = wrapper(assemble_df_deprecated, df)
+#
+#
+#timed = timeit.timeit(wrapped, number=10);
+#timeddep = timeit.timeit(wrappeddep, number=10);
