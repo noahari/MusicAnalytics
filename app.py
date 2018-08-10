@@ -13,7 +13,7 @@ def index():
     
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
-        array = request.args.get("queue")
+        array = request.form['queue']
         return render_template("index.html", data = array)
     
 #        for items in array:
@@ -21,23 +21,20 @@ def index():
 #                df = data_scrape.search_album_id(array[items][0], array[items][1])
 #            else if (array[items][2] = 1):
 #                df = data_scrape.search_album_id(array[items][0], array[items][1])    
-#        df = data_scrape.assemble_df(df)
         
-        clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
-        clean = clean.astype(str)
-
-        chart_data = clean.to_dict(orient='records')
-        data = json.dumps(chart_data)
-        data = json.loads(data)
-        return render_template("index.html", data = data)
+    
+        
+#        clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
+#        clean = clean.astype(str)
+#
+#        chart_data = clean.to_dict(orient='records')
+#        data = json.dumps(chart_data)
+#        data = json.loads(data)
+#        return render_template("index.html", data = data)
     
     return render_template("index.html", data = [{'Enter a song':1}])
 
 
-
-
-if request.method == 'POST':
-    array = request.args.get("queue")
 
 
 if __name__ == "__main__":
