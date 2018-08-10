@@ -12,12 +12,16 @@ app = Flask(__name__)
 def index():
     
     if request.method == 'POST':  #this block is only entered when the form is submitted
-        album = request.form.get('album')
-        artist = request.form['artist']
+        
+        array = request.args.get("queue");
 
-        df = data_scrape.search_album_id(album, artist)
+        for items in array:
+            if (array[items][2] = 0):    
+                df = data_scrape.search_album_id(array[items][0], array[items][1])
+            else if (array[items][2] = 1):
+                df = data_scrape.search_album_id(array[items][0], array[items][1])    
         df = data_scrape.assemble_df(df)
-
+        
         clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
         clean = clean.astype(str)
 
