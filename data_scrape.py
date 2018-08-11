@@ -11,6 +11,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
 import banger
 import timeit
+import multiprocessing
 
 
 
@@ -130,30 +131,35 @@ def search_album_id_deprecated(album, artist):
 
 def assemble_df(df):
     apply = df.apply
-    dfloc = df.at
+    pool = multiprocessing.Pool(processes=2)
     df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
     df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1,  )
+    pool.map(df_iterat, df)
+def df_iterat(df):
     for i, row in df.iterrows():
         features = sp.audio_features(row['id'])[0]
-        dfloc[i, 'Acousticness'] = features['acousticness']
-        dfloc[i, 'Danceability'] = features['danceability']
-        dfloc[i, 'Duration(s)'] = features['duration_ms'] / 1000
-        dfloc[i, 'Energy'] = features['energy']
-        dfloc[i, 'Verbosity'] = features['speechiness']
-        dfloc[i, 'Tempo'] = features['tempo']
-        dfloc[i, 'Positivity'] = features['valence']
-        dfloc[i, 'Loudness'] = features['loudness']
-        dfloc[i, 'Liveness'] = features['liveness']
-        dfloc[i, 'Time Signature'] = features['time_signature']
+        df.at[i, 'Acousticness'] = features['acousticness']
+        df.at[i, 'Danceability'] = features['danceability']
+        df.at[i, 'Duration(s)'] = features['duration_ms'] / 1000
+        df.at[i, 'Energy'] = features['energy']
+        df.at[i, 'Verbosity'] = features['speechiness']
+        df.at[i, 'Tempo'] = features['tempo']
+        df.at[i, 'Positivity'] = features['valence']
+        df.at[i, 'Loudness'] = features['loudness']
+        df.at[i, 'Liveness'] = features['liveness']
+        df.at[i, 'Time Signature'] = features['time_signature']
 
 
-  #  df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+#comment start for timeit
+    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in df.select_dtypes(include = numerics).columns:
         df.at['Album Average', column] = df[column].astype(float).mean()
     df.at['Album Average', 'track'] = ('Album Average')
+#comment end for timeit    
+    pool.close()  
     return df 
 
 def assemble_df_deprecated(df):
@@ -174,13 +180,14 @@ def assemble_df_deprecated(df):
         df.at[i, 'Liveness'] = features['liveness']
         df.at[i, 'Time Signature'] = features['time_signature']
 
-
-   # df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+#comment start for timeit
+    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
     
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in df.select_dtypes(include = numerics).columns:
         df.at['Album Average', column] = df[column].astype(float).mean()
     df.at['Album Average', 'track'] = ('Album Average')
+#comment end for timeit
     return df 
 
 
@@ -201,5 +208,5 @@ def assemble_df_deprecated(df):
 #wrappeddep = wrapper(assemble_df_deprecated, df)
 #
 #
-#timed = timeit.timeit(wrapped, number=10);
-#timeddep = timeit.timeit(wrappeddep, number=10);
+#timed = timeit.timeit(wrapped, number=1);
+#timeddep = timeit.timeit(wrappeddep, number=1);
