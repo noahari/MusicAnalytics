@@ -56,7 +56,7 @@ text{
 
 
   <div id = "form">
-  <form method="POST" onsubmit="push_queue()" >
+  <form method="POST" onsubmit="return push_queue()" >
   <label for="song">Song:</label>
   <input id = "song" name = "song" size = "20" type = "text" value = "">
   <label for="album">Album:</label>
@@ -64,7 +64,7 @@ text{
   <label for="artist">Artist:</label>
   <input id = "artist" name = "artist" size = "20" type = "text" value = ""><br>
   <br>
-  <input type=hidden name=queue value="" id = 'unique'>
+  <input type="hidden" name='queue1' value="" id = "unique">
 <input id="Add" type="button" value="Add tracks to queue" onclick="add_to_queue();">
 <input type="submit" value="Push queue to graph" ><br>
   </form>
@@ -272,7 +272,7 @@ function path(d, ctx, color){
 
 
 //should be changed to add up existing data(data) and data that has been queued. This will change the element id of unique to the entire queue which is what flask calls.
-//old data that exists on graph needs to be converted into format that matches queue so that the two can be joined. 
+//old data that exists on graph needs to be converted into format that matches queue so that the two can be joined.
 function push_queue(){
     console.log('hi');
     var old = JSON.stringify(data);
@@ -282,7 +282,7 @@ function push_queue(){
     data = combo.replace("][",",")
     console.log(data);
     data = JSON.parse(data);
-    document.getElementById('unique').innerHTML = data
+    document.getElementById("unique").value = data
 
 }
 

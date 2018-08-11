@@ -13,7 +13,7 @@ def index():
     
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
-        array = request.form['queue']
+        array = request.form['queue1']
         return render_template("index.html", data = array)
     
 #        for items in array:
