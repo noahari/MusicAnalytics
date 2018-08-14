@@ -5,6 +5,7 @@ import data_scrape
 from flask import Flask, render_template
 from flask import request
 app = Flask(__name__)
+import sys
 
 
 
@@ -14,6 +15,7 @@ def index():
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
         array = request.form['queue1']
+        print(array, file=sys.stderr)
         return render_template("index.html", data = array)
     
 #        for items in array:

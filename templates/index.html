@@ -49,7 +49,9 @@ text{
     width: 600px;
 
     }
-
+    body{
+  background: url(/img/cream_dust.png) repeat 0 0;
+}
 </style>
 </head>
 <body>
@@ -274,7 +276,9 @@ function path(d, ctx, color){
 //should be changed to add up existing data(data) and data that has been queued. This will change the element id of unique to the entire queue which is what flask calls.
 //old data that exists on graph needs to be converted into format that matches queue so that the two can be joined.
 function push_queue(){
-    console.log('hi');
+    console.log(data)
+    console.log(queue)
+    console.log('hi')
     var old = JSON.stringify(data);
     var newdata = queue
     newdata = JSON.stringify(newdata);
