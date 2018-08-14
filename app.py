@@ -5,7 +5,9 @@ import data_scrape
 from flask import Flask, render_template
 from flask import request
 app = Flask(__name__)
+import pandas as pd
 import sys
+
 
 
 
@@ -15,8 +17,15 @@ def index():
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
         array = request.form['queue1']
-        print(array, file=sys.stderr)
-        return render_template("index.html", data = array)
+        #turn array json object back to dataframe and deal with it
+        return type(array)
+        df = pd.DataFrame(array)
+    
+        clean = df.astype(str)
+        chart_data = clean.to_dict(orient='records')
+        data = json.dumps(chart_data)
+        data = json.loads(data)
+        return render_template("index.html", data = ty)
     
 #        for items in array:
 #            if (array[items][2] = 0):    
@@ -34,7 +43,18 @@ def index():
 #        data = json.loads(data)
 #        return render_template("index.html", data = data)
     
-    return render_template("index.html", data = [{'Enter a song':1}])
+    artist = 'brockhampton'
+    album = 'saturation'
+    df = data_scrape.search_album_id(album, artist)
+    df = data_scrape.assemble_df_deprecated(df)
+    clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
+    clean = clean.astype(str)
+
+    chart_data = clean.to_dict(orient='records')
+    data = json.dumps(chart_data)
+    data = json.loads(data)
+    
+    return render_template("index.html", data = data)#[{'Enter a song':1}])
 
 
 

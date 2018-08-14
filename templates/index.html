@@ -276,16 +276,14 @@ function path(d, ctx, color){
 //should be changed to add up existing data(data) and data that has been queued. This will change the element id of unique to the entire queue which is what flask calls.
 //old data that exists on graph needs to be converted into format that matches queue so that the two can be joined.
 function push_queue(){
-    console.log(data)
+
+
+
     console.log(queue)
-    console.log('hi')
-    var old = JSON.stringify(data);
-    var newdata = queue
-    newdata = JSON.stringify(newdata);
-    combo = newdata + old
-    data = combo.replace("][",",")
-    console.log(data);
-    data = JSON.parse(data);
+    for(i = 0; i < queue.length; i ++){
+      data['new' + i] = queue[i];
+    }
+    console.log(data)
     document.getElementById("unique").value = data
 
 }
@@ -347,7 +345,6 @@ function add_to_queue(){
         var addition = [songname, artist, sVa];
     }
     queue.push(addition);
-    console.log(queue);
 }
 
 function undo_add(){
