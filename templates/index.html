@@ -281,10 +281,14 @@ function push_queue(){
 
     console.log(queue)
     for(i = 0; i < queue.length; i ++){
-      data['new' + i] = queue[i];
+      data.push({name: queue[i][0], artist: queue[i][1], tf:  queue[i][2] });
     }
+
     console.log(data)
     document.getElementById("unique").value = data
+
+
+
 
 }
 
