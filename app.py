@@ -18,6 +18,7 @@ def index():
         
         array = request.form['queue1']
         #turn array json object back to dataframe and deal with it
+        array = json.dumps(array)
         array = json.loads(array)
         return array
         df = pd.DataFrame(array)
