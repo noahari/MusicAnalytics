@@ -17,17 +17,15 @@ def index():
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
         array = request.form['queue1']
-        #turn array json object back to dataframe and deal with it
-        array = json.dumps(array)
-        array = json.loads(array)
-        return array
-        df = pd.DataFrame(array)
+
+        #code from main.py
+    
     
         clean = df.astype(str)
         chart_data = clean.to_dict(orient='records')
         data = json.dumps(chart_data)
         data = json.loads(data)
-        return render_template("index.html", data = ty)
+        return render_template("index.html", data = data)
     
 #        for items in array:
 #            if (array[items][2] = 0):    
