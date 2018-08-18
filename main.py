@@ -46,5 +46,5 @@ for i, row in df2.iterrows():
     else:
         temp = data_scrape.search_song_id(row['name'],row['artist'])
         temp = data_scrape.assemble_df_deprecated(temp)
-        df = df.concat([df, temp])
-data_scrape.calc_avg(df)
+        df = pd.concat([df, temp])
+#data_scrape.calc_avg(df)
