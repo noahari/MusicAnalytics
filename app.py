@@ -24,16 +24,13 @@ def index():
         for i, row in df2.iterrows():
             if(row['tf'] == 0):
                 temp = data_scrape.search_album_id(row['name'],row['artist'])
-                temp = data_scrape.assemble_df_deprecated(temp)
             else:
                 temp = data_scrape.search_song_id(row['name'],row['artist'])
-                temp = data_scrape.assemble_df_deprecated(temp)
+            temp = data_scrape.assemble_df_deprecated(temp)
             df = pd.concat([df, temp])
     
-        df = df.drop(['id', 'lyrics', 'Word Frequency'], 1)
-        clean = df.astype(str)
-        chart_data = clean.to_dict(orient='records')
-        data = json.dumps(chart_data)
+        df = df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records')
+        data = json.dumps(df)
         data = json.loads(data)
         return render_template("index.html", data = data)
     
@@ -53,18 +50,9 @@ def index():
 #        data = json.loads(data)
 #        return render_template("index.html", data = data)
     
-    artist = 'brockhampton'
-    album = 'saturation'
-    df = data_scrape.search_album_id(album, artist)
-    df = data_scrape.assemble_df_deprecated(df)
-    clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
-    clean = clean.astype(str)
 
-    chart_data = clean.to_dict(orient='records')
-    data = json.dumps(chart_data)
-    data = json.loads(data)
     
-    return render_template("index.html", data = data)#[{'Enter a song':1}])
+    return render_template("index.html", data = [{'Enter a song':1}])
 
 
 
