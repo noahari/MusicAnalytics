@@ -40,6 +40,11 @@ df2 = df[['artist', 'name', 'tf']].copy().dropna()
 df = df.drop(['artist', 'name', 'tf'], 1).dropna()
 for i, row in df2.iterrows():
     if(row['tf'] == 0):
-        data_scrape.search_album_id
+        temp = data_scrape.search_album_id(row['name'],row['artist'])
+        temp = data_scrape.assemble_df_deprecated(temp)
+        df = pd.concat([df, temp])
     else:
-        data_scrape.search_song_id
+        temp = data_scrape.search_song_id(row['name'],row['artist'])
+        temp = data_scrape.assemble_df_deprecated(temp)
+        df = df.concat([df, temp])
+data_scrape.calc_avg(df)

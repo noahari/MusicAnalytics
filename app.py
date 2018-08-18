@@ -20,7 +20,7 @@ def index():
 
         #code from main.py
     
-    
+        
         clean = df.astype(str)
         chart_data = clean.to_dict(orient='records')
         data = json.dumps(chart_data)

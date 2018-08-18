@@ -154,10 +154,7 @@ def df_iterat(df):
 
 #comment start for timeit
     df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
-    numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
-    for column in df.select_dtypes(include = numerics).columns:
-        df.at['Album Average', column] = df[column].astype(float).mean()
-    df.at['Album Average', 'track'] = ('Album Average')
+
 #comment end for timeit    
     pool.close()  
     return df 
@@ -182,14 +179,14 @@ def assemble_df_deprecated(df):
 
 #comment start for timeit
     df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
-    
+#comment end for timeit
+    return df 
+
+def calc_avg(df):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in df.select_dtypes(include = numerics).columns:
         df.at['Album Average', column] = df[column].astype(float).mean()
     df.at['Album Average', 'track'] = ('Album Average')
-#comment end for timeit
-    return df 
-
 
 
 
