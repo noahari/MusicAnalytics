@@ -18,9 +18,19 @@ def index():
         
         array = request.form['queue1']
 
-        #code from main.py
+        df = pd.DataFrame(eval(array))
+        df2 = df[['artist', 'name', 'tf']].copy().dropna()
+        df = df.drop(['artist', 'name', 'tf'], 1).dropna()
+        for i, row in df2.iterrows():
+            if(row['tf'] == 0):
+                temp = data_scrape.search_album_id(row['name'],row['artist'])
+                temp = data_scrape.assemble_df_deprecated(temp)
+            else:
+                temp = data_scrape.search_song_id(row['name'],row['artist'])
+                temp = data_scrape.assemble_df_deprecated(temp)
+            df = pd.concat([df, temp])
     
-        
+        df = df.drop(['id', 'lyrics', 'Word Frequency'], 1)
         clean = df.astype(str)
         chart_data = clean.to_dict(orient='records')
         data = json.dumps(chart_data)

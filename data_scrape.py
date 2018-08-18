@@ -185,8 +185,8 @@ def assemble_df_deprecated(df):
 def calc_avg(df):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     for column in df.select_dtypes(include = numerics).columns:
-        df.at['Album Average', column] = df[column].astype(float).mean()
-    df.at['Album Average', 'track'] = ('Album Average')
+        df.at['Total Average', column] = df[column].astype(float).mean()
+    df.at['Total Average', 'track'] = ('Total Average')
 
 
 
