@@ -19,7 +19,7 @@ def index():
         array = request.form['queue1']
         df = pd.DataFrame(eval(array))
         df2 = df[['artist', 'name', 'tf']].copy().dropna()
-        df = df.drop(['artist', 'name', 'tf'], 1).dropna()
+        df = df.drop(['name', 'tf'], 1).dropna()
         for i, row in df2.iterrows():
             if(row['tf'] == 0):
                 temp = data_scrape.search_album_id(row['name'],row['artist'])
