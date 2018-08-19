@@ -131,13 +131,10 @@ def search_album_id_deprecated(album, artist):
 
 def assemble_df(df):
     apply = df.apply
-    pool = multiprocessing.Pool(processes=2)
     df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
     df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1,  )
-    pool.map(df_iterat, df)
-def df_iterat(df):
     for i, row in df.iterrows():
         features = sp.audio_features(row['id'])[0]
         df.at[i, 'Acousticness'] = features['acousticness']
@@ -155,30 +152,6 @@ def df_iterat(df):
 #comment start for timeit
     df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
 
-#comment end for timeit    
-    pool.close()  
-    return df 
-
-def assemble_df_deprecated(df):
-    df['lyrics'] = df.apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
-    df['Lyrical Sentiment'] = df.apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
-    df['Reading Level'] = df.apply(lambda row: reading_level(row['lyrics']) ,1)
-    df['Word Frequency'] = df.apply(lambda row: word_frequency(row['lyrics']) ,1,  )
-    for i, row in df.iterrows():
-        features = sp.audio_features(row['id'])[0]
-        df.at[i, 'Acousticness'] = features['acousticness']
-        df.at[i, 'Danceability'] = features['danceability']
-        df.at[i, 'Duration(s)'] = features['duration_ms'] / 1000
-        df.at[i, 'Energy'] = features['energy']
-        df.at[i, 'Verbosity'] = features['speechiness']
-        df.at[i, 'Tempo'] = features['tempo']
-        df.at[i, 'Positivity'] = features['valence']
-        df.at[i, 'Loudness'] = features['loudness']
-        df.at[i, 'Liveness'] = features['liveness']
-        df.at[i, 'Time Signature'] = features['time_signature']
-
-#comment start for timeit
-    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
 #comment end for timeit
     return df 
 
@@ -202,8 +175,8 @@ def calc_avg(df):
 #df = search_album_id("saturation", "brockhampton")
 #print(df.head)
 #wrapped = wrapper(assemble_df, df)
-#wrappeddep = wrapper(assemble_df_deprecated, df)
+##wrappeddep = wrapper(assemble_df_deprecated, df)
 #
 #
 #timed = timeit.timeit(wrapped, number=1);
-#timeddep = timeit.timeit(wrappeddep, number=1);
+##timeddep = timeit.timeit(wrappeddep, number=1);
