@@ -26,32 +26,21 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 def scrape_lyrics(title, artist):
     ##Takes the Url and strips the html down to just the lyrics
     ##The Lyrics are placed into var clean
-    title = title.replace(" ", "-")
-    title = title.replace("/", "-")
-    title = title.replace("&", "and")
+    title = title.replace(" ", "-").replace("/", "-").replace("&", "and")
     title = re.sub('[^0-9a-zA-Z-]+', '', title)
     title = re.sub('--*','-', title)
-    artist = artist.replace(" ", "-")
-    artist = artist.replace("/", "-")
-    artist = artist.replace("&", "and")
+    artist = artist.replace(" ", "-").replace("/", "-").replace("&", "and")
     artist = re.sub('[^0-9a-zA-Z-]+', '', artist)
     artist = re.sub('--*','-', artist)
-    url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
-    source = requests.get(url)
+    source = requests.get('https://genius.com/'+artist+'-'+title+'-lyrics')
     if source.status_code == 404:
-        print('Could not get lyrics for ' + str(title))
-        return 'na'
-    source = source.text
-    source = source.split('<div class="lyrics">')[1]
-    source = source.split('<!--/sse-->')[0]
-    clean = re.sub('<[^>]+>', '', source).strip()
-    return clean
+        return ' '
+    source = source.text.split('<div class="lyrics">')[1].split('<!--/sse-->')[0]
+    return re.sub('<[^>]+>', '', source).strip()
 
 def sentiment_analysis(lyrics):
     #in future get rid of brackets that have artist name
-   sid = SentimentIntensityAnalyzer()
-   ss = sid.polarity_scores(lyrics)
-   return ss['compound']
+    return SentimentIntensityAnalyzer().polarity_scores(lyrics)['compound']
     
 
 def valence_analysis(id):
@@ -88,8 +77,7 @@ def word_frequency(lyrics):
 #https://pypi.org/project/textstat/
 #http://www.readabilityformulas.com/articles/how-do-i-decide-which-readability-formula-to-use.php
 def reading_level(lyrics):
-    rl = textstat.flesch_kincaid_grade(lyrics)
-    return rl
+    return textstat.flesch_kincaid_grade(lyrics)
 #100.00-90.00 	5th grade 	Very easy to read. Easily understood by an average 11-year-old student.
 #90.0–80.0 	6th grade 	Easy to read. Conversational English for consumers.
 #80.0–70.0 	7th grade 	Fairly easy to read.
@@ -98,11 +86,14 @@ def reading_level(lyrics):
 #50.0–30.0 	College 	Difficult to read.
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
-def search_song_id(title, artist):
+def search_song_id_deprecated(title, artist):
     result = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')
     result = result['tracks']
     result = result['items'][0]
     return result['id']
+
+def search_song_id(title, artist):
+    return sp.search(q = title + ' ' + artist, limit = 1, type = 'track')['tracks']['items'][0]['id']
 
 def search_album_id(album, artist):  
     df = pd.DataFrame()
@@ -148,7 +139,6 @@ def assemble_df(df):
         df.at[i, 'Liveness'] = features['liveness']
         df.at[i, 'Time Signature'] = features['time_signature']
 
-
 #comment start for timeit
     df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
 
@@ -160,7 +150,7 @@ def calc_avg(df):
     for column in df.select_dtypes(include = numerics).columns:
         df.at['Total Average', column] = df[column].astype(float).mean()
     df.at['Total Average', 'track'] = ('Total Average')
-
+    return df
 
 
 #TESTING--------------------------------------

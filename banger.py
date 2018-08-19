@@ -35,10 +35,6 @@ def percent_bangitude(title, artist):
 
     
 def test(df):
-    scaler = joblib.load('scaler.pkl')
-    clf = joblib.load('rf_model.pkl')
-    test_df = df.drop(['track', 'artist', 'id', 'lyrics', 'Word Frequency'], 1)
-    test_df = scaler.transform(test_df)
-    return clf.predict(test_df)
+    return joblib.load('rf_model.pkl').predict(joblib.load('scaler.pkl').transform(df.drop(['track', 'artist', 'id', 'lyrics', 'Word Frequency'], 1)))
 
         

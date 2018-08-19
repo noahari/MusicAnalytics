@@ -16,8 +16,7 @@ def index():
     
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
-        array = request.form['queue1']
-        df = pd.DataFrame(eval(array))
+        df = pd.DataFrame(eval(request.form['queue1']))
         df2 = df[['artist', 'name', 'tf']].copy().dropna()
         df = df.drop(['name', 'tf'], 1).dropna()
         for i, row in df2.iterrows():
@@ -25,35 +24,15 @@ def index():
                 temp = data_scrape.search_album_id(row['name'],row['artist'])
             else:
                 temp = data_scrape.search_song_id(row['name'],row['artist'])
-            temp = data_scrape.assemble_df(temp)
-            df = pd.concat([df, temp])
-    
+            df = pd.concat([df, data_scrape.assemble_df(temp)])   
         try:
             df = df.drop('Enter a song', 1).dropna()
         except:
             pass
-    
-        df = df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records')
         
-        data = json.dumps(df)
-        data = json.loads(data)
-        return render_template("index.html", data = data)
+        return render_template("index.html", data = json.loads(json.dumps(df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records'))))
     
-#        for items in array:
-#            if (array[items][2] = 0):    
-#                df = data_scrape.search_album_id(array[items][0], array[items][1])
-#            else if (array[items][2] = 1):
-#                df = data_scrape.search_album_id(array[items][0], array[items][1])    
-        
-    
-        
-#        clean = df.drop(['artist', 'id', 'lyrics', 'Word Frequency'], 1)
-#        clean = clean.astype(str)
-#
-#        chart_data = clean.to_dict(orient='records')
-#        data = json.dumps(chart_data)
-#        data = json.loads(data)
-#        return render_template("index.html", data = data)
+
     
 
 
