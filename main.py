@@ -34,7 +34,7 @@ banger_or_nah = banger.test(title, artist, 1)
 #data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
 
 
-array = [{"Enter a song":1},{"name":"views","artist":"drake","tf":0}]
+array = [{"Enter a song":1},{"name":"feel no ways","artist":"drake","tf":1}]
 df = pd.DataFrame(array)
 df2 = df[['artist', 'name', 'tf']].copy().dropna()
 df = df.drop(['artist', 'name', 'tf'], 1).dropna()

@@ -17,7 +17,6 @@ def index():
     if request.method == 'POST':  #this block is only entered when the form is submitted
         
         array = request.form['queue1']
-
         df = pd.DataFrame(eval(array))
         df2 = df[['artist', 'name', 'tf']].copy().dropna()
         df = df.drop(['artist', 'name', 'tf'], 1).dropna()
@@ -35,6 +34,7 @@ def index():
             pass
     
         df = df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records')
+        
         data = json.dumps(df)
         data = json.loads(data)
         return render_template("index.html", data = data)
