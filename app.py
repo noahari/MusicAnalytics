@@ -26,8 +26,13 @@ def index():
                 temp = data_scrape.search_album_id(row['name'],row['artist'])
             else:
                 temp = data_scrape.search_song_id(row['name'],row['artist'])
-            temp = data_scrape.assemble_df_deprecated(temp)
+            temp = data_scrape.assemble_df(temp)
             df = pd.concat([df, temp])
+    
+        try:
+            df = df.drop('Enter a song', 1).dropna()
+        except:
+            pass
     
         df = df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records')
         data = json.dumps(df)
@@ -50,6 +55,7 @@ def index():
 #        data = json.loads(data)
 #        return render_template("index.html", data = data)
     
+
 
     
     return render_template("index.html", data = [{'Enter a song':1}])
