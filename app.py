@@ -32,11 +32,6 @@ def index():
         
         return render_template("index.html", data = json.loads(json.dumps(df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records'))))
     
-
-    
-
-
-    
     return render_template("index.html", data = [{'Enter a song':1}])
 
 

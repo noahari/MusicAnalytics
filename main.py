@@ -6,7 +6,8 @@ from sklearn.externals import joblib
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
 
         
@@ -32,21 +33,34 @@ banger_or_nah = banger.test(title, artist, 1)
 #testval = testdf.at(0,'energy')
 #print(testval)
 #data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
+client_id = '91df6ca120d7407a877a64fabb100b49'
+client_secret = '05a35b3ad63948c398d82dc8251d2bfb'
+
+client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 
-array = [{"Enter a song":1},{"name":"feel no ways","artist":"drake","tf":1}]
-df = pd.DataFrame(array)
-df2 = df[['artist', 'name', 'tf']].copy().dropna()
-df = df.drop(['artist', 'name', 'tf'], 1).dropna()
-for i, row in df2.iterrows():
-    if(row['tf'] == 0):
-        temp = data_scrape.search_album_id(row['name'],row['artist'])
-    else:
-        temp = data_scrape.search_song_id(row['name'],row['artist'])
-    temp = data_scrape.assemble_df(temp)
-    df = pd.concat([df, temp])
-try:
-    df = df.drop('Enter a song', 1).dropna()
-except:
-    pass
-#data_scrape.calc_avg(df)
+
+
+
+
+df = data_scrape.search_album_id(album, artist)
+apply = df.apply
+df['lyrics'] = apply(lambda row: data_scrape.scrape_lyrics(row['track'], row['artist']),1)
+df['Lyrical Sentiment'] = apply(lambda row: data_scrape.sentiment_analysis(row['lyrics']) ,1)
+df['Reading Level'] = apply(lambda row: data_scrape.reading_level(row['lyrics']) ,1)
+df['Word Frequency'] = apply(lambda row: data_scrape.word_frequency(row['lyrics']) ,1)
+for i, row in df.iterrows():
+    features = sp.audio_features(row['id'])[0]
+    df.append(features, ignore_index = True)
+
+
+
+
+
+
+
+
+
+
+

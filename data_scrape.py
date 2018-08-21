@@ -35,8 +35,7 @@ def scrape_lyrics(title, artist):
     source = requests.get('https://genius.com/'+artist+'-'+title+'-lyrics')
     if source.status_code == 404:
         return ' '
-    source = source.text.split('<div class="lyrics">')[1].split('<!--/sse-->')[0]
-    return re.sub('<[^>]+>', '', source).strip()
+    return re.sub('<[^>]+>', '', source.text.split('<div class="lyrics">')[1].split('<!--/sse-->')[0]).strip()
 
 def sentiment_analysis(lyrics):
     #in future get rid of brackets that have artist name
@@ -77,7 +76,17 @@ def word_frequency(lyrics):
 #https://pypi.org/project/textstat/
 #http://www.readabilityformulas.com/articles/how-do-i-decide-which-readability-formula-to-use.php
 def reading_level(lyrics):
-    return textstat.flesch_kincaid_grade(lyrics)
+    r = textstat.flesch_kincaid_grade(lyrics)
+    if r >= 90:
+        return '5th Grade'
+    elif r >=65:
+        return 'Middle School'
+    elif r >=50:
+        return 'High School'
+    elif r >= 30:
+        return 'College'
+    else:
+        return 'College Graduate'
 #100.00-90.00 	5th grade 	Very easy to read. Easily understood by an average 11-year-old student.
 #90.0–80.0 	6th grade 	Easy to read. Conversational English for consumers.
 #80.0–70.0 	7th grade 	Fairly easy to read.
@@ -98,11 +107,11 @@ def search_song_id(title, artist):
 def search_album_id(album, artist):  
     df = pd.DataFrame()
     tracks = sp.album_tracks(sp.search(q = album + ' ' + artist, limit = 1, type = 'album')['albums']['items'][0]['id'])['items']
-    dfloc = df.at
+    dat = df.at
     for i in range(len(tracks)):
-        dfloc[i, 'track'] = re.sub("'","`", tracks[i]['name'])
-        dfloc[i, 'artist'] = artist
-        dfloc[i, 'id'] = tracks[i]['id']
+        dat[i, 'track'] = re.sub("'","`", tracks[i]['name'])
+        dat[i, 'artist'] = artist
+        dat[i, 'id'] = tracks[i]['id']
     return df
 
 
@@ -125,22 +134,23 @@ def assemble_df(df):
     df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
-    df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1,  )
+    df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1)
+    dat = df.at
     for i, row in df.iterrows():
         features = sp.audio_features(row['id'])[0]
-        df.at[i, 'Acousticness'] = features['acousticness']
-        df.at[i, 'Danceability'] = features['danceability']
-        df.at[i, 'Duration(s)'] = features['duration_ms'] / 1000
-        df.at[i, 'Energy'] = features['energy']
-        df.at[i, 'Wordiness'] = features['speechiness']
-        df.at[i, 'Tempo'] = features['tempo']
-        df.at[i, 'Positivity'] = features['valence']
-        df.at[i, 'Loudness'] = features['loudness']
-        df.at[i, 'Liveness'] = features['liveness']
-        df.at[i, 'Time Signature'] = features['time_signature']
+        dat[i, 'Acousticness'] = features['acousticness']
+        dat[i, 'Danceability'] = features['danceability']
+        dat[i, 'Duration(s)'] = features['duration_ms'] / 1000
+        dat[i, 'Energy'] = features['energy']
+        dat[i, 'Wordiness'] = features['speechiness']
+        dat[i, 'Tempo'] = features['tempo']
+        dat[i, 'Positivity'] = features['valence']
+        dat[i, 'Loudness'] = features['loudness']
+        dat[i, 'Liveness'] = features['liveness']
+        dat[i, 'Time Signature'] = features['time_signature']
 
 #comment start for timeit
-    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+ #   df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
 
 #comment end for timeit
     return df 
