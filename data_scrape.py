@@ -102,7 +102,10 @@ def search_song_id(title, artist):
     result = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')
     result = result['tracks']
     result = result['items'][0]
-    return result['id']
+    info = {"track": title,
+            "artist": artist,
+            "id": result["id"]}
+    return info
 
 def search_album_id(album, artist):  
     df = pd.DataFrame()
@@ -131,6 +134,8 @@ def search_album_id_deprecated(album, artist):
 
 def assemble_df(df):
     apply = df.apply
+    #maybe we should consider getting rid of lyrics here altogether and just 
+    #call reading level and sentiment directly on a call of scrape lyrics bc dfs are slow
     df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
@@ -148,9 +153,30 @@ def assemble_df(df):
         df.at[i, 'Liveness'] = features['liveness']
         df.at[i, 'Time Signature'] = features['time_signature']
 
+def assemble_sdf(info):
+    df = pd.DataFrame()
+    dfat = df.at
+    dfat[1,'track'] = info["track"]
+    dfat[1,'artist'] = info["artist"]
+    dfat[1,'id'] = info['id']
+    lyrics = scrape_lyrics(info['track'], info['artist'])
+    dfat[1,'Lyrical Sentiment'] = sentiment_analysis(lyrics)
+    dfat[1,'Reading Level'] = reading_level(lyrics)
+    #dfat[1,'Word Frequency'] = word_frequency(lyrics)
+    features = sp.audio_features(info['id'])[0]
+    dfat[1,'Acousticness'] = features['acousticness']
+    dfat[1,'Danceability'] = features['danceability']
+    dfat[1,'Duration(s)'] = features['duration_ms'] / 1000
+    dfat[1,'Energy'] = features['energy']
+    dfat[1,'Verbosity'] = features['speechiness']
+    dfat[1,'Tempo'] = features['tempo']
+    dfat[1,'Positivity'] = features['valence']
+    dfat[1,'Loudness'] = features['loudness']
+    dfat[1,'Liveness'] = features['liveness']
+    dfat[1,'Time Signature'] = features['time_signature']
 
 #comment start for timeit
-    df['Bumps in the whip?'] = pd.Series(banger.test(df)).values
+    #dfat[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values
 
 #comment end for timeit
     return df 
@@ -161,8 +187,8 @@ def calc_avg(df):
         df.at['Total Average', column] = df[column].astype(float).mean()
     df.at['Total Average', 'track'] = ('Total Average')
 
-
-
+testsong = search_song_id("boogie", "brockhampton")
+testdf = assemble_sdf(testsong)
 #TESTING--------------------------------------
 #
 #def wrapper(func, *args, **kwargs):
