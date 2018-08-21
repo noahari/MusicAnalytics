@@ -67,12 +67,12 @@ text{
   <input id = "artist" name = "artist" size = "20" type = "text" value = ""><br>
   <br>
   <input type="hidden" name='queue1' value="" id = "unique">
-<input id="Add" type="button" value="Add tracks to queue" onclick="add_to_queue();">
-<input type="submit" value="Push queue to graph" ><br>
+<input id="Add" type="button" value="Add tracks to queue!" onclick="add_to_queue();">
+<input type="submit" value="Update graph with queue!" ><br>
 <input id="Delete" type="button" value="Delete Tracks!" onclick="delete_track();" /><br>
   </form>
   </div>
-
+<div>Thanks for checking out our website! Feel free to add as many songs or albums to the queue and then update the graph with it. Each line represents a song. Try dragging around the columns and brushing over different songs. </div>
 <!---
 oFormObject.elements["username"].value = 'Jon Lord';
 to pass the queue to the hidden html variable
@@ -278,8 +278,6 @@ function path(d, ctx, color){
 //old data that exists on graph needs to be converted into format that matches queue so that the two can be joined.
 function push_queue(){
 
-
-
     console.log(queue)
     for(i = 0; i < queue.length; i ++){
       data.push({name: queue[i][0], artist: queue[i][1], tf:  queue[i][2] });
@@ -287,9 +285,6 @@ function push_queue(){
 
     console.log(data)
     document.getElementById("unique").value = JSON.stringify(data);
-
-
-
 
 }
 
@@ -332,6 +327,10 @@ function add_to_queue(){
     var songname = document.getElementById("song").value;
     var albumname = document.getElementById("album").value;
     var artist = document.getElementById("artist").value;
+    document.getElementById('song').value = ''
+    document.getElementById('album').value = ''
+    document.getElementById('artist').value = ''
+
     var sVa = -1;
     if (!((songname == "") || (albumname == ""))){
         console.log("error, dual input");
@@ -355,10 +354,6 @@ function add_to_queue(){
 function undo_add(){
     queue.pop();
 }
-
-
-
-
 
 
 

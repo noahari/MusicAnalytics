@@ -26,32 +26,20 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 def scrape_lyrics(title, artist):
     ##Takes the Url and strips the html down to just the lyrics
     ##The Lyrics are placed into var clean
-    title = title.replace(" ", "-")
-    title = title.replace("/", "-")
-    title = title.replace("&", "and")
+    title = title.replace(" ", "-").replace("/", "-").replace("&", "and")
     title = re.sub('[^0-9a-zA-Z-]+', '', title)
     title = re.sub('--*','-', title)
-    artist = artist.replace(" ", "-")
-    artist = artist.replace("/", "-")
-    artist = artist.replace("&", "and")
+    artist = artist.replace(" ", "-").replace("/", "-").replace("&", "and")
     artist = re.sub('[^0-9a-zA-Z-]+', '', artist)
     artist = re.sub('--*','-', artist)
-    url = 'https://genius.com/'+artist+'-'+title+'-lyrics'
-    source = requests.get(url)
+    source = requests.get('https://genius.com/'+artist+'-'+title+'-lyrics')
     if source.status_code == 404:
-        print('Could not get lyrics for ' + str(title))
-        return 'na'
-    source = source.text
-    source = source.split('<div class="lyrics">')[1]
-    source = source.split('<!--/sse-->')[0]
-    clean = re.sub('<[^>]+>', '', source).strip()
-    return clean
+        return ' '
+    return re.sub('<[^>]+>', '', source.text.split('<div class="lyrics">')[1].split('<!--/sse-->')[0]).strip()
 
 def sentiment_analysis(lyrics):
     #in future get rid of brackets that have artist name
-   sid = SentimentIntensityAnalyzer()
-   ss = sid.polarity_scores(lyrics)
-   return ss['compound']
+    return SentimentIntensityAnalyzer().polarity_scores(lyrics)['compound']
     
 
 def valence_analysis(id):
@@ -88,8 +76,17 @@ def word_frequency(lyrics):
 #https://pypi.org/project/textstat/
 #http://www.readabilityformulas.com/articles/how-do-i-decide-which-readability-formula-to-use.php
 def reading_level(lyrics):
-    rl = textstat.flesch_kincaid_grade(lyrics)
-    return rl
+    r = textstat.flesch_kincaid_grade(lyrics)
+    if r >= 90:
+        return '5th Grade'
+    elif r >=65:
+        return 'Middle School'
+    elif r >=50:
+        return 'High School'
+    elif r >= 30:
+        return 'College'
+    else:
+        return 'College Graduate'
 #100.00-90.00 	5th grade 	Very easy to read. Easily understood by an average 11-year-old student.
 #90.0–80.0 	6th grade 	Easy to read. Conversational English for consumers.
 #80.0–70.0 	7th grade 	Fairly easy to read.
@@ -98,7 +95,7 @@ def reading_level(lyrics):
 #50.0–30.0 	College 	Difficult to read.
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
-def search_song_id(title, artist):
+def search_song_id_deprecated(title, artist):
     result = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')
     result = result['tracks']
     result = result['items'][0]
@@ -107,14 +104,17 @@ def search_song_id(title, artist):
             "id": result["id"]}
     return info
 
+def search_song_id(title, artist):
+    return sp.search(q = title + ' ' + artist, limit = 1, type = 'track')['tracks']['items'][0]['id']
+
 def search_album_id(album, artist):  
     df = pd.DataFrame()
     tracks = sp.album_tracks(sp.search(q = album + ' ' + artist, limit = 1, type = 'album')['albums']['items'][0]['id'])['items']
-    dfloc = df.at
+    dat = df.at
     for i in range(len(tracks)):
-        dfloc[i, 'track'] = re.sub("'","`", tracks[i]['name'])
-        dfloc[i, 'artist'] = artist
-        dfloc[i, 'id'] = tracks[i]['id']
+        dat[i, 'track'] = re.sub("'","`", tracks[i]['name'])
+        dat[i, 'artist'] = artist
+        dat[i, 'id'] = tracks[i]['id']
     return df
 
 
@@ -139,7 +139,8 @@ def assemble_df(df):
     df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
     df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
     df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
-    df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1,  )
+    df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1)
+    dat = df.at
     for i, row in df.iterrows():
         features = sp.audio_features(row['id'])[0]
         df.at[i, 'Acousticness'] = features['acousticness']
@@ -177,7 +178,6 @@ def assemble_sdf(info):
 
 #comment start for timeit
     #dfat[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values
-
 #comment end for timeit
     return df 
 
@@ -186,10 +186,12 @@ def calc_avg(df):
     for column in df.select_dtypes(include = numerics).columns:
         df.at['Total Average', column] = df[column].astype(float).mean()
     df.at['Total Average', 'track'] = ('Total Average')
+    return df
 
-testsong = search_song_id("boogie", "brockhampton")
-testdf = assemble_sdf(testsong)
+
 #TESTING--------------------------------------
+#testsong = search_song_id("boogie", "brockhampton")
+#testdf = assemble_sdf(testsong)
 #
 #def wrapper(func, *args, **kwargs):
 #    def wrapped():
