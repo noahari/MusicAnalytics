@@ -33,7 +33,6 @@ canvas, svg {
 
 .graph {
     position: relative;
-    margin: 20px;
     padding: 20px;
     float: left;
     display: inline;
@@ -97,22 +96,24 @@ to pass the queue to the hidden html variable
 -->
 
     <div id = "chart">
-    <canvas id = "foreground"></canvas>
-    <svg class="graph">
-</svg>
-      
-<div id = "TextGuide">
-<h2>How to Use TuneTables</h2><b>
-TuneTables is...
-<h3>Adding Music to the Graph</h3><b>
-In order to add songs or albums to the graph...
-Warning about input errors...
-<b>
-<h3>TuneTables Lingo</h3><b>
-On the graph, there are some characteristics of the tracks you added that are a
-little nebulous. Here we have compiled a dictionary of the terms here for you!<b>
-</div>
-  </div>
+        <div id = "graphwrapper">
+            <canvas id = "foreground"></canvas>
+            <svg class="graph">
+            </svg>
+        </div>  
+        <div id = "TextGuide">
+        <h2>How to Use TuneTables</h2><b>
+        TuneTables is...
+        <h3>Adding Music to the Graph</h3><b>
+        In order to add songs or albums to the graph...
+        Warning about input errors...
+        <b>
+        <h3>TuneTables Lingo</h3><b>
+        On the graph, there are some characteristics of the tracks you added that are a
+        little nebulous. Here we have compiled a dictionary of the terms here for you!<b>
+        </div>
+    </div>
+  
   <script type = "text/javascript" src = "https://d3js.org/d3.v5.js"></script>
   <script type = "text/javascript">
   window.requestAnimFrame = (function(){
@@ -123,6 +124,7 @@ little nebulous. Here we have compiled a dictionary of the terms here for you!<b
   })();
 
 var m = [30, 10, 10, 10],
+m2 = [50, 30, 30, 30],
 w = 1200 - m[1] - m[3],
 h = 700 - m[0] - m[2];
 
@@ -145,7 +147,7 @@ var colors = {
 d3.selectAll("canvas")
   .attr("width",w + m[1] + m[3])
   .attr("height", h + m[0] + m[2])
-  .style("padding", m.join("px ") + "px");
+  .style("padding", m2.join("px ") + "px");
 
   foreground = document.getElementById('foreground').getContext('2d');
 
