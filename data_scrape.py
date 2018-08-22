@@ -22,9 +22,10 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 
 
-def scrape_lyrics(title, artist):
+def scrape_lyrics_deprecated(title, artist):
     ##Takes the Url and strips the html down to just the lyrics
     ##The Lyrics are placed into var clean
+    #also replace is way faster than sub and it can all be on one line
     title = title.replace(" ", "-").replace("/", "-").replace("&", "and")
     title = re.sub('[^0-9a-zA-Z-]+', '', title)
     title = re.sub('--*','-', title)
