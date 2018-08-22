@@ -94,17 +94,13 @@ def reading_level(lyrics):
 #50.0–30.0 	College 	Difficult to read.
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
-def search_song_id_deprecated(title, artist):
-    return sp.search(q = title + ' ' + artist, limit = 1, type = 'track')['tracks']['items'][0]['id']    
 
 def search_song_id(title, artist):
-    result = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')
-    result = result['tracks']
-    result = result['items'][0]
-    info = {"track": title,
-            "artist": artist,
-            "id": result["id"]}
-    return info
+    df = pd.DataFrame()
+    df.at[1,'track'] = title
+    df.at[1, 'artist'] = artist
+    df.at[1, 'id'] = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')['tracks']['items'][0]['id']
+    return df
 
 def search_album_id(album, artist):  
     df = pd.DataFrame()
@@ -132,7 +128,6 @@ def search_album_id_deprecated(album, artist):
 
 
 def assemble_df(df):
-    import banger
     apply = df.apply
     #maybe we should consider getting rid of lyrics here altogether and just 
     #call reading level and sentiment directly on a call of scrape lyrics bc dfs are slow
@@ -143,47 +138,20 @@ def assemble_df(df):
     dat = df.at
     for i, row in df.iterrows():
         features = sp.audio_features(row['id'])[0]
-        df.at[i, 'Acousticness'] = features['acousticness']
-        df.at[i, 'Danceability'] = features['danceability']
-        df.at[i, 'Duration(s)'] = features['duration_ms'] / 1000
-        df.at[i, 'Energy'] = features['energy']
-        df.at[i, 'Verbosity'] = features['speechiness']
-        df.at[i, 'Tempo'] = features['tempo']
-        df.at[i, 'Positivity'] = features['valence']
-        df.at[i, 'Loudness'] = features['loudness']
-        df.at[i, 'Liveness'] = features['liveness']
-        df.at[i, 'Time Signature'] = features['time_signature']
-        df.at[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values    
+        dat[i, 'Acousticness'] = features['acousticness']
+        dat[i, 'Danceability'] = features['danceability']
+        dat[i, 'Duration(s)'] = features['duration_ms'] / 1000
+        dat[i, 'Energy'] = features['energy']
+        dat[i, 'Verbosity'] = features['speechiness']
+        dat[i, 'Tempo'] = features['tempo']
+        dat[i, 'Positivity'] = features['valence']
+        dat[i, 'Loudness'] = features['loudness']
+        dat[i, 'Liveness'] = features['liveness']
+        dat[i, 'Time Signature'] = features['time_signature']
+        #dat[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values    
     return df
 
-def assemble_sdf(info):
-    import banger
-    df = pd.DataFrame()
-    dfat = df.at
-    dfat[1,'track'] = info['track']
-    dfat[1,'artist'] = info["artist"]
-    dfat[1,'id'] = info['id']
-    lyrics = scrape_lyrics(info['track'], info['artist'])
-    dfat[1,'Lyrical Sentiment'] = sentiment_analysis(lyrics)
-    dfat[1,'Reading Level'] = reading_level(lyrics)
-    #dfat[1,'Word Frequency'] = word_frequency(lyrics)
-    return word_frequency(lyrics)
-    features = sp.audio_features(info['id'])[0]
-    dfat[1,'Acousticness'] = features['acousticness']
-    dfat[1,'Danceability'] = features['danceability']
-    dfat[1,'Duration(s)'] = features['duration_ms'] / 1000
-    dfat[1,'Energy'] = features['energy']
-    dfat[1,'Verbosity'] = features['speechiness']
-    dfat[1,'Tempo'] = features['tempo']
-    dfat[1,'Positivity'] = features['valence']
-    dfat[1,'Loudness'] = features['loudness']
-    dfat[1,'Liveness'] = features['liveness']
-    dfat[1,'Time Signature'] = features['time_signature']
 
-#comment start for timeit
-    #dfat[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values
-#comment end for timeit
-    return df 
 
 def calc_avg(df):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
@@ -193,9 +161,7 @@ def calc_avg(df):
     return df
 
 
-#TESTING--------------------------------------
-testsong = search_song_id("boogie", "brockhampton")
-testdf = assemble_sdf(testsong)
+
 #
 #def wrapper(func, *args, **kwargs):
 #    def wrapped():
