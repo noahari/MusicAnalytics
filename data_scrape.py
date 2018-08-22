@@ -9,7 +9,6 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from collections import Counter
-import banger
 import timeit
 import multiprocessing
 
@@ -96,6 +95,9 @@ def reading_level(lyrics):
 #30.0–0.0 	College graduate 	Very difficult to read. Best understood by university graduates. 
 
 def search_song_id_deprecated(title, artist):
+    return sp.search(q = title + ' ' + artist, limit = 1, type = 'track')['tracks']['items'][0]['id']    
+
+def search_song_id(title, artist):
     result = sp.search(q = title + ' ' + artist, limit = 1, type = 'track')
     result = result['tracks']
     result = result['items'][0]
@@ -103,9 +105,6 @@ def search_song_id_deprecated(title, artist):
             "artist": artist,
             "id": result["id"]}
     return info
-
-def search_song_id(title, artist):
-    return sp.search(q = title + ' ' + artist, limit = 1, type = 'track')['tracks']['items'][0]['id']
 
 def search_album_id(album, artist):  
     df = pd.DataFrame()
@@ -133,6 +132,7 @@ def search_album_id_deprecated(album, artist):
 
 
 def assemble_df(df):
+    import banger
     apply = df.apply
     #maybe we should consider getting rid of lyrics here altogether and just 
     #call reading level and sentiment directly on a call of scrape lyrics bc dfs are slow
@@ -153,17 +153,21 @@ def assemble_df(df):
         df.at[i, 'Loudness'] = features['loudness']
         df.at[i, 'Liveness'] = features['liveness']
         df.at[i, 'Time Signature'] = features['time_signature']
+        df.at[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values    
+    return df
 
 def assemble_sdf(info):
+    import banger
     df = pd.DataFrame()
     dfat = df.at
-    dfat[1,'track'] = info["track"]
+    dfat[1,'track'] = info['track']
     dfat[1,'artist'] = info["artist"]
     dfat[1,'id'] = info['id']
     lyrics = scrape_lyrics(info['track'], info['artist'])
     dfat[1,'Lyrical Sentiment'] = sentiment_analysis(lyrics)
     dfat[1,'Reading Level'] = reading_level(lyrics)
     #dfat[1,'Word Frequency'] = word_frequency(lyrics)
+    return word_frequency(lyrics)
     features = sp.audio_features(info['id'])[0]
     dfat[1,'Acousticness'] = features['acousticness']
     dfat[1,'Danceability'] = features['danceability']
@@ -190,8 +194,8 @@ def calc_avg(df):
 
 
 #TESTING--------------------------------------
-#testsong = search_song_id("boogie", "brockhampton")
-#testdf = assemble_sdf(testsong)
+testsong = search_song_id("boogie", "brockhampton")
+testdf = assemble_sdf(testsong)
 #
 #def wrapper(func, *args, **kwargs):
 #    def wrapped():

@@ -22,6 +22,24 @@ canvas, svg {
   position: relative;
 }
 
+#TextGuide{
+    position: absolute;
+    text-align: center;
+    float: left;
+    display: inline;
+    border: 15px solid blue;
+    margin: 20px;
+}
+
+.graph {
+    position: relative;
+    margin: 20px;
+    padding: 20px;
+    float: left;
+    display: inline;
+    width: 70%;
+}
+
 .brush .extent {
 fill-opacity: .3;
 stroke: #fff;
@@ -80,7 +98,20 @@ to pass the queue to the hidden html variable
 
     <div id = "chart">
     <canvas id = "foreground"></canvas>
-    <svg></svg>
+    <svg class="graph">
+</svg>
+      
+<div id = "TextGuide">
+<h2>How to Use TuneTables</h2><b>
+TuneTables is...
+<h3>Adding Music to the Graph</h3><b>
+In order to add songs or albums to the graph...
+Warning about input errors...
+<b>
+<h3>TuneTables Lingo</h3><b>
+On the graph, there are some characteristics of the tracks you added that are a
+little nebulous. Here we have compiled a dictionary of the terms here for you!<b>
+</div>
   </div>
   <script type = "text/javascript" src = "https://d3js.org/d3.v5.js"></script>
   <script type = "text/javascript">
