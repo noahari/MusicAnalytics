@@ -28,9 +28,11 @@ canvas, svg {
     text-align: center;
     float: left;
     display: inline;
-    border: 15px solid blue;
+    border: 15px solid #2A92ED;
     margin: 20px;
+    background-color: #4CAF50
 }
+
 
 .graph {
     position: relative;
@@ -67,7 +69,8 @@ text{
 
     }
     body{
-  background: url(/img/cream_dust.png) repeat 0 0;
+  /*background: url(/img/cream_dust.png) repeat 0 0;
+  background-color: #106cbc*/
 }
 table, td {
     border: 1px solid black;
@@ -132,15 +135,51 @@ to pass the queue to the hidden html variable
             </svg>
         </div>
         <div id = "TextGuide">
+        <font color = "white">
         <h2>How to Use TuneTables</h2><b>
-        TuneTables is...
-        <h3>Adding Music to the Graph</h3><b>
-        In order to add songs or albums to the graph...
-        Warning about input errors...
-        <b>
-        <h3>TuneTables Lingo</h3><b>
+        TuneTables is an open-source graphical visualization tool for music analytics. It runs utilizing machine learning algorithms 
+        and collects some information through the Spotify API, and gathering other information such as lyrics
+        through publically visible sources for non-redistrubitive and purely analytical purposes. While it is currently optimized for
+        curious listeners to learn more about their favorite songs and have fun with our machine learning algorithms, the framework is available
+        to plug in more data to the visualization and add deeper analysis.<br>
+        <h3>Adding Music to the Graph</h3>
+        In order to add songs or albums to the graph, input a song OR album name with its corresponding artist,
+        then add it to the queue. When you are done adding things to the queue, you can push the queue to the graph
+        for a parallel coordinates visualization of a musical analysis of every song in your queue!
+        <br>
+        <h3>Warning about input errors...</h3>
+        Tunetables is in a pre-alpha state, so there are some already known bugs and quirks to its usage. Errors will result in a blank graph.<br>
+        Do not type in all 3 fields, only song & artist or album & artist.<br>
+        Input songs that do not exist on both Spotify and Genius will currently cause errors.<br> 
+        Be patient, currently the site runs quite slowly due to both a need for optimization
+        and its limited bandwidth being in a pre-alpha state<br>
+        Similarly, it is not reccomended to add more than 3 albums worth to the graph since it will likely cause it to time out,
+        but you are free to try and add as many as you like.
+        <br>
+        <h3>TuneTables Lingo</h3><br>
         On the graph, there are some characteristics of the tracks you added that are a
-        little nebulous. Here we have compiled a dictionary of the terms here for you!<b>
+        little nebulous. Here we have compiled a dictionary of the terms here for you!<br>
+        <br>
+        <p style="text-align:left;">
+        <u>Acousticness:</u> A score from 0 to 1 rating how likely it is that the song
+         has been detected by the machine to be acoustic.<br><br>
+        <u>Bumps in the whip:</u> Whether or not a song is a banger determined by a trained machine learning algorithm that accounts for all listed, and some unlisted analytics of your input songs. CURRENTLY A HIDDEN VALUE<br><br>
+        <u>Danceability:</u> A score from 0 to 1 rating how danceable a song is based on rhythm, beat prominence, regularity, etc.<br><br>
+        <u>Duration:</u> The length of a track in seconds.<br><br>
+        <u>Energy:</u> A rating of 0 to 1 with higher scores indicating higher speed, intensity, dynamism, and musical entropy.<br><br>
+        <u>Liveness:</u> A score from 0 to 1 rating how likely it is that the song has
+         been detected by the machine to be live performed or live recorded.<br><br>
+        <u>Loudness:</u> The sonic intensity of a track in decibels.<br><br>
+        <u>Lyrical Sentiment:</u> A score from -1 to 1 with higher scores correlating with more positive language toward the subject of the song, and lower scores with negative language.<br><br>
+        <u>Positivity:</u> A score from 0 to 1 with higher scores correlating with musical positivity and lower scores with negativity (both sad and angry songs are musically negative).<br><br>
+        <u>Reading Level:</u> The academic reading level of the lyrics calculated algorithmically by using the Flesch-Kincaid Reading Scale.<br><br>
+        <u>Tempo:</u> The tempo of the track in BPM.<br><br>
+        <u>Time Signature:</u> Currently represents meter, or how many beats per bar, rather than complete time signature.<br><br>
+        <u>Verbosity:</u> A rating from 0 to 1 representing a ratio of words to music, values above .66 indicate speech only, and below .33 indicate instrumental tracks, traditional songs falling between these two landmarks.<br><br>
+        <u>Artist:</u> The name of the artist for a given track.<br><br>
+        <u>Track:</u> The name of the track that corresponds to the line passing through it.<br><br>
+        </p>
+        </font>
         </div>
     </div>
 
