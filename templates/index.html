@@ -10,6 +10,7 @@
 
 svg {
   font: 10px sans-serif;
+  max-width: 1300px
 }
 
 canvas, svg {
@@ -21,6 +22,11 @@ canvas, svg {
 
 #chart {
   position: relative;
+}
+
+canvas#foreground {
+    width: 70%;
+    height: 700px;
 }
 
 #TextGuide{
@@ -127,7 +133,7 @@ to pass the queue to the hidden html variable
     <div id = "chart">
         <div id = "graphwrapper">
             <canvas id = "foreground"></canvas>
-            <svg class="graph">
+            <svg class="graph" id = "viewbox">
             </svg>
         </div>
         <div id = "TextGuide">
@@ -155,6 +161,7 @@ to pass the queue to the hidden html variable
 var m = [30, 10, 10, 10],
 m2 = [50, 30, 30, 30],
 w = 1200 - m[1] - m[3],
+w2 = document.getElementById("viewbox").getAttribute("width"),
 h = 700 - m[0] - m[2];
 
 
@@ -183,7 +190,7 @@ d3.selectAll("canvas")
   foreground.strokeStyle = "rgba(0,100,160,.75)";
 
   var svg = d3.select("svg")
-  .attr("width", w + m[1] + m[3])
+  .attr("width", "70%")
   .attr("height", h + m[0] + m[2])
   .append('svg:g')
   .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
@@ -216,7 +223,7 @@ var g = svg.selectAll(".dimension")
 .enter().append("svg:g")
 .attr("class", "dimension")
 .attr("transform", function(d)  {
-  return "translate(" + x(d) +")";
+  return "translate(" + x(d)*.7 +")";
 })
   .call(d3.drag()
   .on("start", function(d)  {
