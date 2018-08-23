@@ -114,19 +114,6 @@ def search_album_id(album, artist):
     return df
 
 
-def search_album_id_deprecated(album, artist):  
-    df = pd.DataFrame()
-    result = sp.search(q = album + ' ' + artist, limit = 1, type = 'album')
-    result = result['albums']
-    result = result['items'][0]
-    tracks = sp.album_tracks(result['id'])
-    tracks = tracks['items']
-    for i in range(len(tracks)):
-        df.at[i, 'track'] = re.sub("'","`", tracks[i]['name'])
-        df.at[i, 'artist'] = artist
-        df.at[i, 'id'] = tracks[i]['id']
-    return df
-
    
 def assemble_df(df):
     apply = df.apply
