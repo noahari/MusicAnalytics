@@ -14,6 +14,7 @@ svg {
 
 canvas, svg {
   position: absolute;
+  padding: 20px;
   top: 0;
   left: 0;
 }
@@ -69,6 +70,9 @@ text{
     body{
   background: url(/img/cream_dust.png) repeat 0 0;
 }
+table, td {
+    border: 1px solid black;
+}
 </style>
 </head>
 <body>
@@ -89,18 +93,28 @@ text{
 <input id="Delete" type="button" value="Delete Tracks!" onclick="delete_track();" /><br>
   </form>
   </div>
-<div>Thanks for checking out our website! Feel free to add as many songs or albums to the queue and then update the graph with it. Each line represents a song. Try dragging around the columns and brushing over different songs. </div>
 <!---
 oFormObject.elements["username"].value = 'Jon Lord';
 to pass the queue to the hidden html variable
 -->
+
+<table id= "myTable" style="width:100%">
+  <tr>
+    <th>Name</th>
+    <th>Song or Album</th>
+    <th>Artist</th>
+</tr>
+</table>
+<br>
+<div>Thanks for checking out our website! Feel free to add as many songs or albums to the queue and then update the graph with it. Each line represents a song. Try dragging around the columns and brushing over different songs. </div>
+
 
     <div id = "chart">
         <div id = "graphwrapper">
             <canvas id = "foreground"></canvas>
             <svg class="graph">
             </svg>
-        </div>  
+        </div>
         <div id = "TextGuide">
         <h2>How to Use TuneTables</h2><b>
         TuneTables is...
@@ -113,7 +127,7 @@ to pass the queue to the hidden html variable
         little nebulous. Here we have compiled a dictionary of the terms here for you!<b>
         </div>
     </div>
-  
+
   <script type = "text/javascript" src = "https://d3js.org/d3.v5.js"></script>
   <script type = "text/javascript">
   window.requestAnimFrame = (function(){
@@ -318,7 +332,8 @@ function push_queue(){
 
     console.log(data)
     document.getElementById("unique").value = JSON.stringify(data);
-
+    var table = document.getElementById("myTable");
+    Table.innerHTML = "";
 }
 
 function delete_track(){
@@ -363,6 +378,12 @@ function add_to_queue(){
     document.getElementById('song').value = ''
     document.getElementById('album').value = ''
     document.getElementById('artist').value = ''
+    var table = document.getElementById("myTable");
+    var row = table.insertRow(1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    cell3.innerHTML = artist;
 
     var sVa = -1;
     if (!((songname == "") || (albumname == ""))){
@@ -374,10 +395,15 @@ function add_to_queue(){
         return;
     }
     else if (!(albumname == "")){
+      cell1.innerHTML = albumname;
+      cell2.innerHTML = 'Album';
+
         sVa = 0;
         var addition = [albumname, artist, sVa];
     }
     else if (!(songname == "")){
+      cell1.innerHTML = songname;
+      cell2.innerHTML = 'Song';
         sVa = 1;
         var addition = [songname, artist, sVa];
     }

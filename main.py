@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-
+import time
         
 album = 'saturation'
 artist = 'brockhampton'
@@ -34,12 +34,13 @@ banger_or_nah = banger.test(title, artist, 1)
 #data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
 
 
-
-
-
-
-lyrics = data_scrape.scrape_lyrics(song, artist)
-
+total = 0
+for i in range(10):
+    start = time.time()
+    df = data_scrape.assemble_df(data_scrape.search_album_id(album, artist))
+    end = time.time()
+    total += end - start
+total = total/10
 
 
 
