@@ -14,7 +14,6 @@ svg {
 
 canvas, svg {
   position: absolute;
-  padding: 20px;
   top: 0;
   left: 0;
 }
@@ -36,7 +35,6 @@ canvas, svg {
 
 .graph {
     position: relative;
-    padding: 20px;
     float: left;
     display: inline;
    }
@@ -69,7 +67,6 @@ text{
   position: fixed;
     height: 600px;
     width: 600px;
-
     }
     body{
   /*background: url(/img/cream_dust.png) repeat 0 0;
@@ -140,7 +137,7 @@ to pass the queue to the hidden html variable
         <div id = "TextGuide">
         <font color = "white">
         <h2>How to Use TuneTables</h2><b>
-        TuneTables is an open-source graphical visualization tool for music analytics. It runs utilizing machine learning algorithms 
+        TuneTables is an open-source graphical visualization tool for music analytics. It runs utilizing machine learning algorithms
         and collects some information through the Spotify API, and gathering other information such as lyrics
         through publically visible sources for non-redistrubitive and purely analytical purposes. While it is currently optimized for
         curious listeners to learn more about their favorite songs and have fun with our machine learning algorithms, the framework is available
@@ -153,7 +150,7 @@ to pass the queue to the hidden html variable
         <h3>Warning about input errors...</h3>
         Tunetables is in a pre-alpha state, so there are some already known bugs and quirks to its usage. Errors will result in a blank graph.<br>
         Do not type in all 3 fields, only song & artist or album & artist.<br>
-        Input songs that do not exist on both Spotify and Genius will currently cause errors.<br> 
+        Input songs that do not exist on both Spotify and Genius will currently cause errors.<br>
         Be patient, currently the site runs quite slowly due to both a need for optimization
         and its limited bandwidth being in a pre-alpha state<br>
         Similarly, it is not reccomended to add more than 3 albums worth to the graph since it will likely cause it to time out,
@@ -196,7 +193,6 @@ to pass the queue to the hidden html variable
   })();
 
 var m = [30, 10, 10, 10],
-m2 = [50, 30, 30, 30],
 w = 1200 - m[1] - m[3],
 h = 700 - m[0] - m[2];
 
@@ -219,7 +215,7 @@ var colors = {
 d3.selectAll("canvas")
   .attr("width",w + m[1] + m[3])
   .attr("height", h + m[0] + m[2])
-  .style("padding", m2.join("px ") + "px");
+  .style("padding", m.join("px ") + "px");
 
   foreground = document.getElementById('foreground').getContext('2d');
 
