@@ -26,11 +26,11 @@ def index():
             df = df.drop('Enter a song', 1).dropna()
         except:
             pass
-        return render_template("index.html", data = json.loads(json.dumps(df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records'))))
+        return render_template("index.html", data = json.loads(json.dumps(df.drop(['id'], 1).astype(str).to_dict(orient='records'))))
     return render_template("index.html", data = [{'Enter a song':1}])
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(threaded = True, debug=True)
 
 
 

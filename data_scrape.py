@@ -113,19 +113,13 @@ def search_album_id(album, artist):
         dat[i, 'id'] = tracks[i]['id']
     return df
 
-
-   
 def assemble_df(df):
-    apply = df.apply
-    #maybe we should consider getting rid of lyrics here altogether and just 
-    #call reading level and sentiment directly on a call of scrape lyrics bc dfs are slow
-    df['lyrics'] = apply(lambda row: scrape_lyrics(row['track'], row['artist']),1)
-    df['Lyrical Sentiment'] = apply(lambda row: sentiment_analysis(row['lyrics']) ,1)
-    df['Reading Level'] = apply(lambda row: reading_level(row['lyrics']) ,1)
-    df['Word Frequency'] = apply(lambda row: word_frequency(row['lyrics']) ,1)
     dat = df.at
     for i, row in df.iterrows():
+        lyrics = scrape_lyrics(row['track'], row['artist'])
         features = sp.audio_features(row['id'])[0]
+        dat[i, 'Lyrical Sentiment'] = sentiment_analysis(lyrics)
+        dat[i, 'Reading Level'] = reading_level(lyrics)
         dat[i, 'Acousticness'] = features['acousticness']
         dat[i, 'Danceability'] = features['danceability']
         dat[i, 'Duration(s)'] = features['duration_ms'] / 1000
@@ -136,10 +130,7 @@ def assemble_df(df):
         dat[i, 'Loudness'] = features['loudness']
         dat[i, 'Liveness'] = features['liveness']
         dat[i, 'Time Signature'] = features['time_signature']
-        #dat[1,'Bumps in the whip?'] = pd.Series(banger.test(df)).values    
     return df
-
-
 
 def calc_avg(df):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
