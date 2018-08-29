@@ -109,7 +109,8 @@ th {
   <input type="hidden" name='queue1' value="" id = "unique">
 <input id="Add" type="button" value="Add tracks to queue!" onclick="add_to_queue();">
 <input type="submit" value="Update graph with queue!" ><br>
-<input id="Delete" type="button" value="Delete Tracks!" onclick="delete_track();" /><br>
+<input id="Delete" type="button" value="Delete Tracks!" onclick="delete_track();" />
+<input id="Undo" type="button" value="Queue Undo" onclick="undo_add();" /><br>
   </form>
   </div>
 <!---
@@ -466,6 +467,8 @@ function add_to_queue(){
 
 function undo_add(){
     queue.pop();
+    var table = document.getElementById("myTable");
+    table.deleteRow(table.rows.length - 1);
 }
 
 
