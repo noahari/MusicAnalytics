@@ -34,8 +34,9 @@ banger_or_nah = banger.test(title, artist, 1)
 #data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
 
 
-df = data_scrape.assemble_df(data_scrape.search_song_id('gummy', artist))
-data = json.loads(json.dumps(df.drop(['id', 'lyrics', 'Word Frequency'], 1).astype(str).to_dict(orient='records')))
+
+df = data_scrape.scrape_lyrics(song, artist)
+
 
 
 
