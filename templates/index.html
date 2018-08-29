@@ -48,6 +48,9 @@ shape-rendering: crispEdges;
 fill: none;
 stroke: #000;
 shape-rendering: crispEdges;
+display: inline;
+float: left;
+width: 70%;
 }
 
 .axis text {
@@ -210,7 +213,7 @@ var colors = {
 };
 
 d3.selectAll("canvas")
-  .attr("width",w + m[1] + m[3])
+  .attr("width",w + m[1] + m[3] + 200)
   .attr("height", h + m[0] + m[2])
   .style("padding", m.join("px ") + "px");
 
