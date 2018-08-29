@@ -9,33 +9,60 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
 import time
-        
-album = 'saturation'
-artist = 'brockhampton'
-song = 'alaska'
+
+#PyLyrics-1.1.0
+from PyLyrics import *        
+
 import json
+
+
+import requests
+import re
+
+client_id = '91df6ca120d7407a877a64fabb100b49'
+client_secret = '05a35b3ad63948c398d82dc8251d2bfb'
+
+client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+
+album = 'saturation'
+artist = 'drake'
+song = 'heartbeat'
+
+
+
 '''
-if title != '':
-    song_list = data_scrape.search_album_id(title, artist)
-else:
-    song_list = data_scrape.search_song_id(title, artist)
-
-#df = data_scrape.assemble_df(song_list, artist)
-
-banger_or_nah = banger.test(title, artist, 1)
+times = 50
+total = 0
+total1 = 0
+for i in range(times):
+    start = time.time()
+    lyrics = data_scrape.scrape_lyrics(song, artist)
+    end = time.time()
+    lyrics1 = PyLyrics.getLyrics(artist, song)
+    end1 = time.time()
+    total = total + end - start
+    total1 = total1 + end1 - end
+total = total / times
+total1 = total1 / times
 '''
-#    analysis = sp.audio_analysis(id)
-#    valence = valence_analysis(id)
-#    mood = mood_analysis(lyrics, id)
-    
-#testdf = data_scrape.assemble_df(data_scrape.search_song_id(title, artist))
-#testval = testdf.at(0,'energy')
-#print(testval)
-#data_scrape.print_df(data_scrape.assemble_df(data_scrape.search_song_id(title, artist)))
+
+times = 50
+new = 0
+for i in range(times):
+    a = time.time()
+    try:
+        lyrics1 = PyLyrics.getLyrics(artist, song)
+    except:
+        pass
+    b = time.time()
+    new = new + b - a
+new = new / times
 
 
 
-df = data_scrape.scrape_lyrics(song, artist)
+
+
 
 
 

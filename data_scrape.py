@@ -21,7 +21,7 @@ client_credentials_manager = SpotifyClientCredentials(client_id=client_id, clien
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 
-
+#currently slowest function
 def scrape_lyrics(title, artist):
     ##Takes the Url and strips the html down to just the lyrics
     ##The Lyrics are placed into var clean
@@ -131,6 +131,7 @@ def assemble_df(df):
         dat[i, 'Liveness'] = features['liveness']
         dat[i, 'Time Signature'] = features['time_signature']
     return df
+
 
 def calc_avg(df):
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
