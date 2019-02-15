@@ -19,11 +19,7 @@ textstat
 scikit
 ```
 
-##Tests
-
-'hello world'
-
-##Features
+## Features
 
 ```
 Sentiment Analysis
