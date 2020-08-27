@@ -1,4 +1,5 @@
 # *THIS PROJECT IS DEPRECATED*
+This project is no longer receiving updates and may have SIGNIFICANTLY out of date dependencies
 
 # MusicAnalytics
 
@@ -22,6 +23,7 @@ scikit
 ## Features
 
 ```
+ML NLP features developed using skl:
 Sentiment Analysis
 Lexical Analysis
 Writing Level
